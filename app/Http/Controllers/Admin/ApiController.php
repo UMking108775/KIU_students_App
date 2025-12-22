@@ -1,0 +1,224 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+class ApiController extends Controller
+{
+    /**
+     * Display API documentation
+     */
+    public function index()
+    {
+        $baseUrl = url('/api/v1');
+        
+        $endpoints = [
+            'authentication' => [
+                [
+                    'method' => 'POST',
+                    'endpoint' => '/auth/register',
+                    'description' => 'Register a new user',
+                    'auth_required' => false,
+                    'parameters' => [
+                        'kiu_id' => 'string|required|unique|numbers only',
+                        'name' => 'string|required|min:3',
+                        'whatsapp_number' => 'string|required|valid phone',
+                        'password' => 'string|required|min:6',
+                        'password_confirmation' => 'string|required',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Registration successful',
+                        'data' => [
+                            'user' => ['id', 'kiu_id', 'name', 'whatsapp_number'],
+                            'token' => 'Bearer token',
+                            'token_type' => 'Bearer',
+                            'expires_in' => '30 days',
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'POST',
+                    'endpoint' => '/auth/login',
+                    'description' => 'Login user',
+                    'auth_required' => false,
+                    'parameters' => [
+                        'kiu_id' => 'string|required|numbers only',
+                        'password' => 'string|required',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Login successful',
+                        'data' => [
+                            'user' => ['id', 'kiu_id', 'name', 'whatsapp_number'],
+                            'token' => 'Bearer token',
+                            'token_type' => 'Bearer',
+                            'expires_in' => '30 days',
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'POST',
+                    'endpoint' => '/auth/logout',
+                    'description' => 'Logout user (revoke current token)',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Logout successful',
+                    ],
+                ],
+                [
+                    'method' => 'POST',
+                    'endpoint' => '/auth/logout-all',
+                    'description' => 'Logout from all devices (revoke all tokens)',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Logged out from all devices successfully',
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/auth/user',
+                    'description' => 'Get authenticated user profile',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'data' => [
+                            'user' => ['id', 'kiu_id', 'name', 'whatsapp_number', 'created_at'],
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'POST',
+                    'endpoint' => '/auth/refresh-token',
+                    'description' => 'Refresh authentication token',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'data' => [
+                            'token' => 'New Bearer token',
+                            'token_type' => 'Bearer',
+                            'expires_in' => '30 days',
+                        ],
+                    ],
+                ],
+            ],
+            'categories' => [
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/categories',
+                    'description' => 'Get all main categories (level 1) that user has access to',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Main categories retrieved successfully',
+                        'data' => [
+                            [
+                                'id' => 1,
+                                'title' => 'Category Name',
+                                'image' => 'full URL to image',
+                                'parent_id' => null,
+                                'level' => 1,
+                                'is_active' => true,
+                                'children' => [],
+                                'contents_count' => 5,
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/categories/{id}',
+                    'description' => 'Get a specific category by ID with its details',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'id' => 'integer|required|category ID',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Category retrieved successfully',
+                        'data' => [
+                            'id' => 1,
+                            'title' => 'Category Name',
+                            'image' => 'full URL to image',
+                            'parent_id' => null,
+                            'level' => 1,
+                            'is_active' => true,
+                            'parent' => null,
+                            'children' => [],
+                            'contents_count' => 5,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/categories/{parentId}/subcategories',
+                    'description' => 'Get all subcategories for a specific parent category',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'parentId' => 'integer|required|parent category ID',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Subcategories retrieved successfully',
+                        'data' => [
+                            [
+                                'id' => 2,
+                                'title' => 'Subcategory Name',
+                                'image' => 'full URL to image',
+                                'parent_id' => 1,
+                                'level' => 2,
+                                'is_active' => true,
+                                'children' => [],
+                                'contents_count' => 3,
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/categories/tree',
+                    'description' => 'Get full category tree with all levels (filtered by user access)',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Category tree retrieved successfully',
+                        'data' => [
+                            [
+                                'id' => 1,
+                                'title' => 'Main Category',
+                                'level' => 1,
+                                'children' => [
+                                    [
+                                        'id' => 2,
+                                        'title' => 'Sub Category',
+                                        'level' => 2,
+                                        'children' => [
+                                            [
+                                                'id' => 3,
+                                                'title' => '3rd Level Category',
+                                                'level' => 3,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return view('admin.api.index', compact('endpoints', 'baseUrl'));
+    }
+}
