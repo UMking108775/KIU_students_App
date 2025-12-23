@@ -41,10 +41,16 @@ Route::prefix('v1')->group(function () {
             Route::get('/{parentId}/subcategories', [\App\Http\Controllers\Api\CategoryController::class, 'subcategories'])->name('api.categories.subcategories');
         });
         
-        // TODO: Add more protected routes here for:
-        // - Contents
-        // - Profile Management
-        // etc.
+        // Contents/Materials (with user access control)
+        Route::prefix('contents')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\ContentController::class, 'all'])->name('api.contents.all');
+            Route::get('/search', [\App\Http\Controllers\Api\ContentController::class, 'search'])->name('api.contents.search');
+            Route::get('/type/{type}', [\App\Http\Controllers\Api\ContentController::class, 'byType'])->name('api.contents.by-type');
+            Route::get('/{id}', [\App\Http\Controllers\Api\ContentController::class, 'show'])->name('api.contents.show');
+        });
+        
+        // Get contents by category (works for all 3 levels)
+        Route::get('/categories/{categoryId}/contents', [\App\Http\Controllers\Api\ContentController::class, 'index'])->name('api.categories.contents');
     });
 });
 

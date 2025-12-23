@@ -217,6 +217,111 @@ class ApiController extends Controller
                     ],
                 ],
             ],
+            'contents' => [
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/categories/{categoryId}/contents',
+                    'description' => 'Get all materials/contents for a specific category (works for all 3 levels)',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'categoryId' => 'integer|required|category ID (Level 1, 2, or 3)',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Contents retrieved successfully',
+                        'data' => [
+                            'category' => [
+                                'id' => 1,
+                                'title' => 'Computer Science',
+                                'level' => 1,
+                            ],
+                            'contents' => [
+                                [
+                                    'id' => 1,
+                                    'title' => 'Introduction to Programming.pdf',
+                                    'content_type' => 'pdf',
+                                    'backblaze_url' => 'https://backblaze.com/file/xyz.pdf',
+                                    'is_active' => true,
+                                    'category' => ['id' => 1, 'title' => 'Computer Science', 'level' => 1],
+                                ],
+                            ],
+                            'total' => 5,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/contents',
+                    'description' => 'Get all materials across all accessible categories',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'All contents retrieved successfully',
+                        'data' => [
+                            'contents' => [],
+                            'total' => 25,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/contents/{id}',
+                    'description' => 'Get a specific material/content by ID',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'id' => 'integer|required|content ID',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Content retrieved successfully',
+                        'data' => [
+                            'id' => 5,
+                            'title' => 'Database Design.pdf',
+                            'content_type' => 'pdf',
+                            'backblaze_url' => 'https://backblaze.com/file/db.pdf',
+                            'is_active' => true,
+                            'category' => ['id' => 2, 'title' => 'Database', 'level' => 2],
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/contents/search?query={search_term}',
+                    'description' => 'Search materials by title',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'query' => 'string|required|search term',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Search completed successfully',
+                        'data' => [
+                            'query' => 'python',
+                            'contents' => [],
+                            'total' => 5,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/contents/type/{type}',
+                    'description' => 'Filter materials by content type (pdf, video, ppt, etc.)',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'type' => 'string|required|content type (pdf, video, ppt, doc, etc.)',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Contents retrieved successfully',
+                        'data' => [
+                            'type' => 'pdf',
+                            'contents' => [],
+                            'total' => 15,
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         return view('admin.api.index', compact('endpoints', 'baseUrl'));
