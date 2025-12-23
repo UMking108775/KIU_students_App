@@ -104,15 +104,15 @@
                         <!-- Level 1 - Main Category -->
                         <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200 p-3">
                             <label class="flex items-center cursor-pointer group">
-                                <input 
-                                    type="checkbox" 
-                                    name="categories[]" 
-                                    value="{{ $mainCategory->id }}"
-                                    id="category_{{ $mainCategory->id }}"
-                                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                                    {{ !isset($userAccess[$mainCategory->id]) || $userAccess[$mainCategory->id] ? 'checked' : '' }}
-                                    onchange="toggleChildren(this, 'level1_{{ $mainCategory->id }}')"
-                                >
+                                    <input 
+                                        type="checkbox" 
+                                        name="categories[]" 
+                                        value="{{ $mainCategory->id }}"
+                                        id="category_{{ $mainCategory->id }}"
+                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                        {{ isset($userAccess[$mainCategory->id]) && $userAccess[$mainCategory->id] ? 'checked' : '' }}
+                                        onchange="toggleChildren(this, 'level1_{{ $mainCategory->id }}')"
+                                    >
                                 <div class="ml-3 flex items-center flex-1 min-w-0">
                                     @if($mainCategory->image)
                                     <img src="{{ asset('storage/' . $mainCategory->image) }}" alt="{{ $mainCategory->title }}" class="w-10 h-10 rounded-lg object-cover mr-3 flex-shrink-0 border-2 border-blue-200">
@@ -141,15 +141,15 @@
                                 @foreach($mainCategory->children as $subCategory)
                                 <div class="bg-white rounded-md border border-gray-200 p-2">
                                     <label class="flex items-center cursor-pointer group">
-                                        <input 
-                                            type="checkbox" 
-                                            name="categories[]" 
-                                            value="{{ $subCategory->id }}"
-                                            id="category_{{ $subCategory->id }}"
-                                            class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-2 focus:ring-green-500 cursor-pointer"
-                                            {{ !isset($userAccess[$subCategory->id]) || $userAccess[$subCategory->id] ? 'checked' : '' }}
-                                            onchange="toggleChildren(this, 'level2_{{ $subCategory->id }}')"
-                                        >
+                                            <input 
+                                                type="checkbox" 
+                                                name="categories[]" 
+                                                value="{{ $subCategory->id }}"
+                                                id="category_{{ $subCategory->id }}"
+                                                class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-2 focus:ring-green-500 cursor-pointer"
+                                                {{ isset($userAccess[$subCategory->id]) && $userAccess[$subCategory->id] ? 'checked' : '' }}
+                                                onchange="toggleChildren(this, 'level2_{{ $subCategory->id }}')"
+                                            >
                                         <div class="ml-2 flex items-center flex-1 min-w-0">
                                             @if($subCategory->image)
                                             <img src="{{ asset('storage/' . $subCategory->image) }}" alt="{{ $subCategory->title }}" class="w-7 h-7 rounded object-cover mr-2 flex-shrink-0">
@@ -179,7 +179,7 @@
                                                 value="{{ $thirdCategory->id }}"
                                                 id="category_{{ $thirdCategory->id }}"
                                                 class="w-3.5 h-3.5 text-purple-600 border-gray-300 rounded focus:ring-2 focus:ring-purple-500 cursor-pointer"
-                                                {{ !isset($userAccess[$thirdCategory->id]) || $userAccess[$thirdCategory->id] ? 'checked' : '' }}
+                                                {{ isset($userAccess[$thirdCategory->id]) && $userAccess[$thirdCategory->id] ? 'checked' : '' }}
                                             >
                                             <div class="ml-2 flex items-center flex-1 min-w-0">
                                                 @if($thirdCategory->image)

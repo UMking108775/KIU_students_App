@@ -27,10 +27,21 @@ class AuthController extends Controller
             $user = User::create([
                 'kiu_id' => $request->kiu_id,
                 'name' => $request->name,
+                'email' => $request->kiu_id . '@kiu.student.app', // Auto-generate email from KIU ID
                 'whatsapp_number' => $request->whatsapp_number,
                 'password' => Hash::make($request->password),
                 'role' => 'user',
             ]);
+
+            // Create access records for all categories with has_access = false (no access by default)
+            $allCategories = \App\Models\Category::pluck('id');
+            foreach ($allCategories as $categoryId) {
+                \App\Models\CategoryAccess::create([
+                    'user_id' => $user->id,
+                    'category_id' => $categoryId,
+                    'has_access' => false, // No access by default - admin must grant
+                ]);
+            }
 
             // Generate token using Sanctum
             $token = $user->createToken('mobile-app', ['*'], now()->addDays(30))->plainTextToken;

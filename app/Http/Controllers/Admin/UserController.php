@@ -66,10 +66,20 @@ class UserController extends Controller
                 'role' => 'user',
             ]);
 
+            // Create access records for all categories with has_access = false (no access by default)
+            $allCategories = Category::pluck('id');
+            foreach ($allCategories as $categoryId) {
+                CategoryAccess::create([
+                    'user_id' => $user->id,
+                    'category_id' => $categoryId,
+                    'has_access' => false, // No access by default
+                ]);
+            }
+
             DB::commit();
 
             return redirect()->route('admin.users.index')
-                ->with('success', 'User created successfully!');
+                ->with('success', 'User created successfully! Please assign category access.');
 
         } catch (\Exception $e) {
             DB::rollBack();

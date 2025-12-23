@@ -73,11 +73,11 @@ class User extends Authenticatable
      */
     public function hasAccessToCategory($categoryId): bool
     {
-        // If no access record exists, user has access by default (for backward compatibility)
+        // If no access record exists, user has NO access by default
         $access = $this->categoryAccess()->where('category_id', $categoryId)->first();
         
         if (!$access) {
-            return true; // Default access if not explicitly denied
+            return false; // No access by default - admin must grant explicitly
         }
         
         return $access->has_access;
