@@ -32,6 +32,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users/{id}/category-access', [\App\Http\Controllers\Admin\UserController::class, 'categoryAccess'])->name('users.category-access');
         Route::put('/users/{id}/category-access', [\App\Http\Controllers\Admin\UserController::class, 'updateCategoryAccess'])->name('users.update-category-access');
         
+        // Help & Support routes
+        Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
+        Route::get('/support', [\App\Http\Controllers\Admin\SupportController::class, 'index'])->name('support.index');
+        Route::get('/support/{id}', [\App\Http\Controllers\Admin\SupportController::class, 'show'])->name('support.show');
+        Route::put('/support/{id}', [\App\Http\Controllers\Admin\SupportController::class, 'update'])->name('support.update');
+        Route::patch('/support/{id}/status', [\App\Http\Controllers\Admin\SupportController::class, 'updateStatus'])->name('support.update-status');
+        
         // API Documentation
         Route::get('/api-docs', [\App\Http\Controllers\Admin\ApiController::class, 'index'])->name('api.index');
     });

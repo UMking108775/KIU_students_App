@@ -322,6 +322,89 @@ class ApiController extends Controller
                     ],
                 ],
             ],
+            'support' => [
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/support/faqs',
+                    'description' => 'Get all active FAQs',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'FAQs retrieved successfully',
+                        'data' => [
+                            'faqs' => [
+                                [
+                                    'id' => 1,
+                                    'question' => 'How do I download materials?',
+                                    'answer' => 'You can download materials by clicking on them...',
+                                    'order' => 0,
+                                ],
+                            ],
+                            'total' => 5,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'POST',
+                    'endpoint' => '/support/submit',
+                    'description' => 'Submit a support ticket/contact form',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'subject' => 'string|required|max:255',
+                        'message' => 'string|required|min:10',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Your support request has been submitted successfully',
+                        'data' => [
+                            'id' => 1,
+                            'subject' => 'Issue with download',
+                            'message' => 'I cannot download PDF files...',
+                            'status' => 'pending',
+                            'admin_response' => null,
+                            'created_at' => '2025-12-22 10:00:00',
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/support/tickets',
+                    'description' => 'Get all support tickets for the authenticated user',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Support tickets retrieved successfully',
+                        'data' => [
+                            'tickets' => [],
+                            'total' => 3,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/support/tickets/{id}',
+                    'description' => 'Get a specific support ticket with admin response',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'id' => 'integer|required|ticket ID',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Support ticket retrieved successfully',
+                        'data' => [
+                            'id' => 1,
+                            'subject' => 'Issue with download',
+                            'message' => 'User message here...',
+                            'status' => 'resolved',
+                            'admin_response' => 'Admin response here...',
+                            'responded_at' => '2025-12-22 11:00:00',
+                            'created_at' => '2025-12-22 10:00:00',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         return view('admin.api.index', compact('endpoints', 'baseUrl'));

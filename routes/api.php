@@ -51,6 +51,14 @@ Route::prefix('v1')->group(function () {
         
         // Get contents by category (works for all 3 levels)
         Route::get('/categories/{categoryId}/contents', [\App\Http\Controllers\Api\ContentController::class, 'index'])->name('api.categories.contents');
+        
+        // Help & Support
+        Route::prefix('support')->group(function () {
+            Route::get('/faqs', [\App\Http\Controllers\Api\SupportController::class, 'faqs'])->name('api.support.faqs');
+            Route::post('/submit', [\App\Http\Controllers\Api\SupportController::class, 'submit'])->name('api.support.submit');
+            Route::get('/tickets', [\App\Http\Controllers\Api\SupportController::class, 'myTickets'])->name('api.support.tickets');
+            Route::get('/tickets/{id}', [\App\Http\Controllers\Api\SupportController::class, 'show'])->name('api.support.show');
+        });
     });
 });
 
