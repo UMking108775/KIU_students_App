@@ -76,5 +76,15 @@ class Notification extends Model
 
         return true;
     }
+
+    /**
+     * Get the users that have read status for this notification.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'user_notifications')
+                    ->withPivot('is_read', 'read_at')
+                    ->withTimestamps();
+    }
 }
 

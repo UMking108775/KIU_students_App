@@ -106,4 +106,23 @@ class User extends Authenticatable
 
         return true;
     }
+
+    /**
+     * Get the notifications that the user has read status for.
+     */
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'user_notifications')
+                    ->withPivot('is_read', 'read_at')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Check if user has read a specific notification.
+     */
+    public function hasReadNotification($notificationId): bool
+    {
+        $notification = $this->notifications()->where('notification_id', $notificationId)->first();
+        return $notification && $notification->pivot->is_read;
+    }
 }
