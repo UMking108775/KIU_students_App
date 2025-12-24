@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Content;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class ContentController extends Controller
@@ -74,7 +75,24 @@ class ContentController extends Controller
 
         $validated['is_active'] = $request->has('is_active');
 
-        Content::create($validated);
+        $content = Content::create($validated);
+        $content->load('category');
+
+        // Create automatic notification for new material/content
+        if ($content->is_active) {
+            $categoryName = $content->category ? $content->category->title : 'Unknown Category';
+            $contentType = strtoupper($content->content_type);
+            
+            Notification::create([
+                'title' => "New {$contentType} Material Available",
+                'message' => "New material '{$content->title}' has been added to {$categoryName}. Download it now!",
+                'type' => 'success',
+                'action_url' => null,
+                'action_text' => null,
+                'is_active' => true,
+                'priority' => 20,
+            ]);
+        }
 
         return redirect()->route('admin.contents.index')
             ->with('success', 'Content created successfully!');

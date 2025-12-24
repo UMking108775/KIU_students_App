@@ -340,6 +340,77 @@
     </div>
     @endif
 
+    <!-- Notifications Endpoints -->
+    @if(isset($endpoints['notifications']))
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-gray-50 border-b border-gray-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-gray-900">Notifications Endpoints</h3>
+            <p class="text-sm text-gray-600 mt-1">Fetch push notifications with scheduling and priority support</p>
+        </div>
+        
+        <div class="divide-y divide-gray-200">
+            @foreach($endpoints['notifications'] as $endpoint)
+                <div class="p-6 hover:bg-gray-50 transition-colors">
+                    <!-- Endpoint Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800">
+                                {{ $endpoint['method'] }}
+                            </span>
+                            <code class="text-sm font-mono text-gray-900">{{ $endpoint['endpoint'] }}</code>
+                        </div>
+                        @if($endpoint['auth_required'])
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Auth Required
+                            </span>
+                        @endif
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-sm text-gray-600 mb-4">{{ $endpoint['description'] }}</p>
+
+                    <!-- Parameters -->
+                    @if(count($endpoint['parameters']) > 0)
+                        <div class="mb-4">
+                            <div class="text-xs font-semibold text-gray-700 mb-2">Request Parameters</div>
+                            <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                                @foreach($endpoint['parameters'] as $param => $rules)
+                                    <div class="flex items-start">
+                                        <code class="text-xs font-mono text-blue-600 mr-2">{{ $param }}</code>
+                                        <span class="text-xs text-gray-600">{{ $rules }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Response Example -->
+                    <div>
+                        <div class="text-xs font-semibold text-gray-700 mb-2">Success Response (200)</div>
+                        <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                            <pre class="text-xs text-green-400 font-mono">{{ json_encode($endpoint['response'], JSON_PRETTY_PRINT) }}</pre>
+                        </div>
+                    </div>
+
+                    <!-- Test Button -->
+                    <div class="mt-4 flex items-center space-x-2">
+                        <button onclick="copyEndpoint('{{ $baseUrl }}{{ $endpoint['endpoint'] }}')" class="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded hover:bg-gray-300 transition-colors">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Copy URL
+                        </button>
+                        <span class="text-xs text-gray-500">{{ $baseUrl }}{{ $endpoint['endpoint'] }}</span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <!-- Error Responses -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h3 class="text-xl font-bold text-gray-900 mb-4">⚠️ Error Responses</h3>

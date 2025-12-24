@@ -39,6 +39,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/support/{id}', [\App\Http\Controllers\Admin\SupportController::class, 'update'])->name('support.update');
         Route::patch('/support/{id}/status', [\App\Http\Controllers\Admin\SupportController::class, 'updateStatus'])->name('support.update-status');
         
+        // Notifications routes
+        Route::resource('notifications', \App\Http\Controllers\Admin\NotificationController::class);
+        
         // API Documentation
         Route::get('/api-docs', [\App\Http\Controllers\Admin\ApiController::class, 'index'])->name('api.index');
     });

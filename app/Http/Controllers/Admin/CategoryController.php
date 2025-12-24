@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -82,7 +83,23 @@ class CategoryController extends Controller
 
         $validated['is_active'] = $request->has('is_active');
 
-        Category::create($validated);
+        $category = Category::create($validated);
+
+        // Create automatic notification for new category
+        if ($category->is_active) {
+            $levelNames = [1 => 'Main Category', 2 => 'Sub Category', 3 => '3rd Level Category'];
+            $levelName = $levelNames[$category->level] ?? 'Category';
+            
+            Notification::create([
+                'title' => "New {$levelName} Added",
+                'message' => "A new {$levelName} '{$category->title}' has been added. Check it out in the app!",
+                'type' => 'success',
+                'action_url' => null,
+                'action_text' => null,
+                'is_active' => true,
+                'priority' => 15,
+            ]);
+        }
 
         $redirectParams = [];
         if ($request->filled('parent_id')) {

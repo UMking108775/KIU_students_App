@@ -59,6 +59,13 @@ Route::prefix('v1')->group(function () {
             Route::get('/tickets', [\App\Http\Controllers\Api\SupportController::class, 'myTickets'])->name('api.support.tickets');
             Route::get('/tickets/{id}', [\App\Http\Controllers\Api\SupportController::class, 'show'])->name('api.support.show');
         });
+        
+        // Notifications
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\NotificationController::class, 'index'])->name('api.notifications.index');
+            Route::get('/count', [\App\Http\Controllers\Api\NotificationController::class, 'count'])->name('api.notifications.count');
+            Route::get('/{id}', [\App\Http\Controllers\Api\NotificationController::class, 'show'])->name('api.notifications.show');
+        });
     });
 });
 

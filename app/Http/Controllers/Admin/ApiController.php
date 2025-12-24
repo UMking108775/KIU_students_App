@@ -405,6 +405,69 @@ class ApiController extends Controller
                     ],
                 ],
             ],
+            'notifications' => [
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/notifications',
+                    'description' => 'Get all active and valid notifications',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'limit' => 'integer|optional|default:50|max:100',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Notifications retrieved successfully',
+                        'data' => [
+                            'notifications' => [
+                                [
+                                    'id' => 1,
+                                    'title' => 'New Study Material Available',
+                                    'message' => 'Check out the new programming tutorials...',
+                                    'type' => 'info',
+                                    'action_url' => null,
+                                    'action_text' => null,
+                                    'priority' => 10,
+                                ],
+                            ],
+                            'total' => 5,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/notifications/count',
+                    'description' => 'Get count of active notifications (for badge)',
+                    'auth_required' => true,
+                    'parameters' => [],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Notification count retrieved successfully',
+                        'data' => [
+                            'count' => 5,
+                        ],
+                    ],
+                ],
+                [
+                    'method' => 'GET',
+                    'endpoint' => '/notifications/{id}',
+                    'description' => 'Get a specific notification by ID',
+                    'auth_required' => true,
+                    'parameters' => [
+                        'id' => 'integer|required|notification ID',
+                    ],
+                    'response' => [
+                        'success' => true,
+                        'message' => 'Notification retrieved successfully',
+                        'data' => [
+                            'id' => 1,
+                            'title' => 'New Study Material Available',
+                            'message' => 'Check out the new programming tutorials...',
+                            'type' => 'info',
+                            'priority' => 10,
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         return view('admin.api.index', compact('endpoints', 'baseUrl'));
