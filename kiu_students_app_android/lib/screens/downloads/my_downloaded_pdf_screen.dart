@@ -30,6 +30,12 @@ class _MyDownloadedPDFScreenState extends State<MyDownloadedPDFScreen> {
     _loadDownloads();
   }
 
+  @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadDownloads() async {
     setState(() => _isLoading = true);
 

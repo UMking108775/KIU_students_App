@@ -27,20 +27,23 @@ class CategoryModel {
   /// Create CategoryModel from JSON
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      image: json['image'] as String?,
-      parentId: json['parent_id'] as int?,
-      level: json['level'] as int,
-      isActive: json['is_active'] as bool? ?? true,
-      contentsCount: json['contents_count'] as int? ?? 0,
-      children: json['children'] != null
-          ? (json['children'] as List)
-                .map((e) => CategoryModel.fromJson(e))
-                .toList()
-          : [],
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title']?.toString() ?? '',
+      image: json['image']?.toString(),
+      parentId: (json['parent_id'] as num?)?.toInt(),
+      level: (json['level'] as num?)?.toInt() ?? 0,
+      isActive: json['is_active'] == null ? true : json['is_active'] == true,
+      contentsCount: (json['contents_count'] as num?)?.toInt() ?? 0,
+      children: (json['children'] as List?)
+              ?.map((e) => CategoryModel.fromJson(e))
+              .toList() ??
+          [],
+      createdAt:
+          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
+      updatedAt:
+          DateTime.tryParse(json['updated_at']?.toString() ?? '') ??
+          DateTime.now(),
     );
   }
 

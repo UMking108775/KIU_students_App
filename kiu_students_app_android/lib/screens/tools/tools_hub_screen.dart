@@ -23,6 +23,12 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
   final ZoomDrawerController _zoomDrawerController = ZoomDrawerController();
 
   @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     return ChangeNotifierProvider(

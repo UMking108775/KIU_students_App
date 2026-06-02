@@ -18,6 +18,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ZoomDrawerController _zoomDrawerController = ZoomDrawerController();
 
   @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.user;

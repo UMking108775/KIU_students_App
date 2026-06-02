@@ -16,13 +16,13 @@ class FaqModel {
 
   factory FaqModel.fromJson(Map<String, dynamic> json) {
     return FaqModel(
-      id: json['id'] as int,
-      question: json['question'] as String,
-      answer: json['answer'] as String,
-      order: json['order'] as int? ?? 0,
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'])
-          : null,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      question: json['question']?.toString() ?? '',
+      answer: json['answer']?.toString() ?? '',
+      order: (json['order'] as num?)?.toInt() ?? 0,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.tryParse(json['created_at'].toString()),
     );
   }
 
@@ -61,18 +61,20 @@ class SupportTicket {
 
   factory SupportTicket.fromJson(Map<String, dynamic> json) {
     return SupportTicket(
-      id: json['id'] as int,
-      subject: json['subject'] as String,
-      message: json['message'] as String,
-      status: json['status'] as String? ?? 'pending',
-      adminResponse: json['admin_response'] as String?,
-      respondedAt: json['responded_at'] != null
-          ? DateTime.tryParse(json['responded_at'])
-          : null,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'])
-          : null,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      subject: json['subject']?.toString() ?? '',
+      message: json['message']?.toString() ?? '',
+      status: json['status']?.toString() ?? 'pending',
+      adminResponse: json['admin_response']?.toString(),
+      respondedAt: json['responded_at'] == null
+          ? null
+          : DateTime.tryParse(json['responded_at'].toString()),
+      createdAt:
+          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.tryParse(json['updated_at'].toString()),
     );
   }
 
@@ -123,13 +125,13 @@ class ImportantLinkModel {
 
   factory ImportantLinkModel.fromJson(Map<String, dynamic> json) {
     return ImportantLinkModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      videoLink: json['video_link'] as String,
-      description: json['description'] as String,
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'])
-          : null,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title']?.toString() ?? '',
+      videoLink: json['video_link']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.tryParse(json['created_at'].toString()),
     );
   }
 

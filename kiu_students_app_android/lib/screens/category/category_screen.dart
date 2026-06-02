@@ -85,6 +85,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void dispose() {
     _syncSubscription?.cancel();
+    _zoomDrawerController.dispose();
     super.dispose();
   }
 

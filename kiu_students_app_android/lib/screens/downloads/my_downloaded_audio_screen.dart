@@ -33,6 +33,12 @@ class _MyDownloadedAudioScreenState extends State<MyDownloadedAudioScreen> {
     _loadDownloads();
   }
 
+  @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadDownloads() async {
     setState(() => _isLoading = true);
 

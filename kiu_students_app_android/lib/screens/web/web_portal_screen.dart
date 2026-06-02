@@ -44,17 +44,21 @@ class _WebPortalScreenState extends State<WebPortalScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
+            if (!mounted) return;
             setState(() {
               _isLoading = true;
               _loadingProgress = 0;
             });
           },
           onProgress: (progress) {
+            if (!mounted) return;
             setState(() => _loadingProgress = progress / 100);
           },
           onPageFinished: (url) async {
+            if (!mounted) return;
             setState(() => _isLoading = false);
             final canGoBack = await _controller.canGoBack();
+            if (!mounted) return;
             setState(() => _canGoBack = canGoBack);
 
             // Check if user has successfully logged in

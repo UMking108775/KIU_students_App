@@ -23,6 +23,10 @@ class ApiService {
 
   final http.Client _client;
 
+  /// Callback fired when an authenticated request returns 401 (expired token).
+  /// Registered once in main() to clear the session and force re-login.
+  static Future<void> Function()? onUnauthorized;
+
   /// Default headers for API requests
   Map<String, String> _headers({String? token}) {
     return {
@@ -46,7 +50,7 @@ class ApiService {
           )
           .timeout(AppConfig.apiTimeout);
 
-      return _handleResponse(response, fromJsonT);
+      return _handleResponse(response, fromJsonT, authenticated: token != null);
     } on SocketException {
       return ApiResponse(
         success: false,
@@ -79,7 +83,7 @@ class ApiService {
           .timeout(AppConfig.apiTimeout);
 
       debugPrint('[ApiService] Response: ${response.statusCode}');
-      return _handleResponse(response, fromJsonT);
+      return _handleResponse(response, fromJsonT, authenticated: token != null);
     } on SocketException {
       return ApiResponse(
         success: false,
@@ -98,8 +102,9 @@ class ApiService {
   /// Now with proper JSON decode error handling
   ApiResponse<T> _handleResponse<T>(
     http.Response response,
-    T? Function(dynamic)? fromJsonT,
-  ) {
+    T? Function(dynamic)? fromJsonT, {
+    bool authenticated = false,
+  }) {
     // Safe JSON parsing with error handling
     Map<String, dynamic> body;
     try {
@@ -125,6 +130,11 @@ class ApiService {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse.fromJson(body, fromJsonT);
     } else if (response.statusCode == 401) {
+      // Only force a logout for authenticated requests (token sent but rejected).
+      // Public endpoints like login/register also return 401 but carry no token.
+      if (authenticated) {
+        onUnauthorized?.call();
+      }
       return ApiResponse(
         success: false,
         message: body['message'] ?? 'Unauthorized. Please login again.',

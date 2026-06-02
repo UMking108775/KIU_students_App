@@ -28,15 +28,17 @@ class DownloadedItem {
 
   factory DownloadedItem.fromJson(Map<String, dynamic> json) {
     return DownloadedItem(
-      contentId: json['content_id'] as int,
-      title: json['title'] as String,
-      contentType: json['content_type'] as String,
-      localPath: json['local_path'] as String,
-      originalUrl: json['original_url'] as String,
-      downloadedAt: DateTime.parse(json['downloaded_at'] as String),
-      fileSize: json['file_size'] as int? ?? 0,
+      contentId: (json['content_id'] as num?)?.toInt() ?? 0,
+      title: json['title']?.toString() ?? '',
+      contentType: json['content_type']?.toString() ?? '',
+      localPath: json['local_path']?.toString() ?? '',
+      originalUrl: json['original_url']?.toString() ?? '',
+      downloadedAt:
+          DateTime.tryParse(json['downloaded_at']?.toString() ?? '') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+      fileSize: (json['file_size'] as num?)?.toInt() ?? 0,
       userKiuId:
-          json['user_kiu_id'] as String? ?? '', // Handle legacy downloads
+          json['user_kiu_id']?.toString() ?? '', // Handle legacy downloads
     );
   }
 
@@ -125,8 +127,21 @@ class DownloadService {
     final jsonStr = _prefs!.getString(_downloadedItemsKey);
     if (jsonStr == null) return [];
 
-    final List<dynamic> jsonList = jsonDecode(jsonStr);
-    return jsonList.map((e) => DownloadedItem.fromJson(e)).toList();
+    try {
+      final List<dynamic> jsonList = jsonDecode(jsonStr);
+      final List<DownloadedItem> items = [];
+      for (final e in jsonList) {
+        try {
+          items.add(DownloadedItem.fromJson(e as Map<String, dynamic>));
+        } catch (_) {
+          // Skip corrupt/legacy entries instead of breaking the whole list
+        }
+      }
+      return items;
+    } catch (_) {
+      // Top-level decode failed; treat as no downloads
+      return [];
+    }
   }
 
   /// Get downloaded audio files for a specific user (by KIU ID)

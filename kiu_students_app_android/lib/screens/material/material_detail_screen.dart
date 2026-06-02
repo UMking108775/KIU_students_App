@@ -41,6 +41,12 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     _checkIfDownloaded();
   }
 
+  @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
   Future<void> _checkIfDownloaded() async {
     final item = await _downloadService.getDownloadedItem(widget.content.id);
     if (item != null && File(item.localPath).existsSync()) {

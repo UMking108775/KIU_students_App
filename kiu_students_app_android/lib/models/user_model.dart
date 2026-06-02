@@ -19,12 +19,16 @@ class UserModel {
   /// Create UserModel from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as int,
-      kiuId: json['kiu_id'] as String,
-      name: json['name'] as String,
-      whatsappNumber: json['whatsapp_number'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      kiuId: json['kiu_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      whatsappNumber: json['whatsapp_number']?.toString() ?? '',
+      createdAt:
+          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
+      updatedAt:
+          DateTime.tryParse(json['updated_at']?.toString() ?? '') ??
+          DateTime.now(),
     );
   }
 

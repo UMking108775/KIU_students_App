@@ -15,6 +15,7 @@ class AuthProvider extends ChangeNotifier {
   bool _isInitialized = false;
   String? _errorMessage;
   bool _isGuestMode = false;
+  bool _handlingSessionExpiry = false;
 
   AuthProvider({AuthService? authService})
     : _authService =
@@ -140,6 +141,28 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     _isLoading = false;
     notifyListeners();
+  }
+
+  /// Handle an expired/invalid session (token rejected with 401).
+  /// Clears the local session without calling the logout API and forces
+  /// re-login. Returns whether a session was actually expired.
+  Future<bool> handleSessionExpired() async {
+    if (_handlingSessionExpiry) return false;
+    if (_user == null && !_isGuestMode) return false; // already logged out / nothing to do
+    _handlingSessionExpiry = true;
+    await _authService.clearSession();
+    try {
+      await AudioService().stop();
+      await CacheService().clearAllCache();
+    } catch (e) {
+      debugPrint('Error clearing data on session expiry: $e');
+    }
+    _user = null;
+    _isGuestMode = false;
+    _errorMessage = 'Your session has expired. Please log in again.';
+    notifyListeners();
+    _handlingSessionExpiry = false;
+    return true;
   }
 
   /// Clear error message

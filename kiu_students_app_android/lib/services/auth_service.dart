@@ -138,6 +138,12 @@ class AuthService {
     return ApiResponse(success: true, message: 'Logged out successfully');
   }
 
+  /// Clear the local session WITHOUT calling the logout API.
+  /// Used when the token is already invalid (e.g. server returned 401).
+  Future<void> clearSession() async {
+    await _storageService.clearAll();
+  }
+
   /// Check if user is logged in
   Future<bool> isLoggedIn() async {
     return await _storageService.isLoggedIn();

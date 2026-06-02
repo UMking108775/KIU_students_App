@@ -23,16 +23,20 @@ class ContentModel {
   /// Create ContentModel from JSON
   factory ContentModel.fromJson(Map<String, dynamic> json) {
     return ContentModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      contentType: json['content_type'] as String,
-      backblazeUrl: json['backblaze_url'] as String,
-      isActive: json['is_active'] as bool? ?? true,
-      category: json['category'] != null
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title']?.toString() ?? '',
+      contentType: json['content_type']?.toString() ?? '',
+      backblazeUrl: json['backblaze_url']?.toString() ?? '',
+      isActive: json['is_active'] == null ? true : json['is_active'] == true,
+      category: json['category'] is Map<String, dynamic>
           ? ContentCategory.fromJson(json['category'])
           : null,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt:
+          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
+      updatedAt:
+          DateTime.tryParse(json['updated_at']?.toString() ?? '') ??
+          DateTime.now(),
     );
   }
 
@@ -109,9 +113,9 @@ class ContentCategory {
 
   factory ContentCategory.fromJson(Map<String, dynamic> json) {
     return ContentCategory(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      level: json['level'] as int,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title']?.toString() ?? '',
+      level: (json['level'] as num?)?.toInt() ?? 0,
     );
   }
 

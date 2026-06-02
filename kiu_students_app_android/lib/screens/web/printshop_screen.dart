@@ -35,17 +35,20 @@ class _PrintshopScreenState extends State<PrintshopScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
+            if (!mounted) return;
             setState(() {
               _isLoading = true;
               _loadingProgress = 0;
             });
           },
           onProgress: (progress) {
+            if (!mounted) return;
             setState(() {
               _loadingProgress = progress / 100;
             });
           },
           onPageFinished: (url) async {
+            if (!mounted) return;
             setState(() {
               _isLoading = false;
             });

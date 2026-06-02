@@ -26,6 +26,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleRefresh() async {
     await context.read<NotificationProvider>().fetchNotifications(
       refresh: true,

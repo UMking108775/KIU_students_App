@@ -29,33 +29,35 @@ class NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      message: json['message'] as String,
-      type: json['type'] as String,
-      actionUrl: json['action_url'] as String?,
-      actionText: json['action_text'] as String?,
-      categoryId: json['category_id'] as int?,
-      priority: json['priority'] as int? ?? 0,
-      isRead: json['is_read'] as bool? ?? false,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title']?.toString() ?? '',
+      message: json['message']?.toString() ?? '',
+      type: json['type']?.toString() ?? '',
+      actionUrl: json['action_url']?.toString(),
+      actionText: json['action_text']?.toString(),
+      categoryId: (json['category_id'] as num?)?.toInt(),
+      priority: (json['priority'] as num?)?.toInt() ?? 0,
+      isRead: json['is_read'] == true,
       readAt: json['read_at'] != null
-          ? DateTime.parse(
+          ? DateTime.tryParse(
               json['read_at'].toString().endsWith('Z')
-                  ? json['read_at']
+                  ? json['read_at'].toString()
                   : '${json['read_at']}Z',
-            ).toLocal()
+            )?.toLocal()
           : null,
-      createdAt: DateTime.parse(
-        json['created_at'].toString().endsWith('Z')
-            ? json['created_at']
-            : '${json['created_at']}Z',
-      ).toLocal(),
+      createdAt:
+          DateTime.tryParse(
+            json['created_at'].toString().endsWith('Z')
+                ? json['created_at'].toString()
+                : '${json['created_at']}Z',
+          )?.toLocal() ??
+          DateTime.now(),
       scheduledAt: json['scheduled_at'] != null
-          ? DateTime.parse(
+          ? DateTime.tryParse(
               json['scheduled_at'].toString().endsWith('Z')
-                  ? json['scheduled_at']
+                  ? json['scheduled_at'].toString()
                   : '${json['scheduled_at']}Z',
-            ).toLocal()
+            )?.toLocal()
           : null,
     );
   }

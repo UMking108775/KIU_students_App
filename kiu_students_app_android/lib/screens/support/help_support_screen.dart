@@ -41,6 +41,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
 
   @override
   void dispose() {
+    _zoomDrawerController.dispose();
     _tabController.dispose();
     super.dispose();
   }

@@ -37,6 +37,12 @@ class _ImportantLinksScreenState extends State<ImportantLinksScreen> {
     _loadLinks();
   }
 
+  @override
+  void dispose() {
+    _zoomDrawerController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadLinks() async {
     setState(() {
       _isLoading = true;

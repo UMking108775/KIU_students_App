@@ -22,8 +22,8 @@ class ApiResponse<T> {
     T? Function(dynamic)? fromJsonT,
   ) {
     return ApiResponse(
-      success: json['success'] as bool,
-      message: json['message'] as String,
+      success: json['success'] == true,
+      message: json['message']?.toString() ?? '',
       data: json['data'] != null && fromJsonT != null
           ? fromJsonT(json['data'])
           : json['data'] as T?,
@@ -31,7 +31,7 @@ class ApiResponse<T> {
           ? (json['errors'] as Map<String, dynamic>).map(
               (key, value) => MapEntry(
                 key,
-                (value as List).map((e) => e.toString()).toList(),
+                (value as List?)?.map((e) => e.toString()).toList() ?? [],
               ),
             )
           : null,
@@ -72,15 +72,12 @@ class AuthResponseData {
 
   factory AuthResponseData.fromJson(Map<String, dynamic> json) {
     // Handle expires_in as either String or int
-    final expiresIn = json['expires_in'];
-    final expiresInStr = expiresIn is int
-        ? expiresIn.toString()
-        : expiresIn as String;
+    final expiresInStr = json['expires_in']?.toString() ?? '';
 
     return AuthResponseData(
-      user: json['user'] as Map<String, dynamic>,
-      token: json['token'] as String,
-      tokenType: json['token_type'] as String,
+      user: (json['user'] as Map<String, dynamic>?) ?? {},
+      token: json['token']?.toString() ?? '',
+      tokenType: json['token_type']?.toString() ?? '',
       expiresIn: expiresInStr,
     );
   }

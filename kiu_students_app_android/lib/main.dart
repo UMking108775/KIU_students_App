@@ -7,6 +7,7 @@ import 'providers/auth_provider.dart';
 import 'providers/category_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/theme_provider.dart';
+import 'services/api_service.dart';
 import 'services/audio_service.dart';
 import 'services/connectivity_service.dart';
 import 'services/background_notification_service.dart';
@@ -37,8 +38,26 @@ void main() async {
   final themeProvider = ThemeProvider();
   await themeProvider.initialize();
 
+  // Handle expired/invalid tokens (401 on authenticated requests):
+  // clear the session and force re-login.
+  ApiService.onUnauthorized = () async {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final didExpire = await authProvider.handleSessionExpired();
+    if (didExpire) {
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        AppRoutes.login,
+        (route) => false,
+      );
+    }
+  };
+
   runApp(KIUStudentsApp(themeProvider: themeProvider));
 }
+
+/// Global navigator key so non-widget code (e.g. the 401 handler) can navigate.
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class KIUStudentsApp extends StatelessWidget {
   final ThemeProvider themeProvider;
@@ -60,6 +79,7 @@ class KIUStudentsApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             title: 'KIU Urdu',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,

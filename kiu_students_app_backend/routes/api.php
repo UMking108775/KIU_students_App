@@ -17,7 +17,7 @@ use App\Http\Controllers\Api\AuthController;
 Route::prefix('v1')->group(function () {
     
     // Public Routes (No Authentication Required)
-    Route::prefix('auth')->group(function () {
+    Route::prefix('auth')->middleware('throttle:5,1')->group(function () {
         Route::post('/register', [AuthController::class, 'register'])->name('api.register');
         Route::post('/login', [AuthController::class, 'login'])->name('api.login');
     });
