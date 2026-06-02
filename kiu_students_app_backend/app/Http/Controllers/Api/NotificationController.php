@@ -26,10 +26,21 @@ class NotificationController extends Controller
 
             $notifications = Notification::active()
                 ->valid()
-                ->where(function($q) use ($accessibleCategoryIds) {
-                    $q->whereNull('category_id');
+                ->where(function($q) use ($accessibleCategoryIds, $user) {
+                    // Global notifications (no category, no user)
+                    $q->where(function($sub) {
+                        $sub->whereNull('category_id')
+                            ->whereNull('user_id');
+                    });
+                    
+                    // Category-specific notifications
                     if (!empty($accessibleCategoryIds)) {
                         $q->orWhereIn('category_id', $accessibleCategoryIds);
+                    }
+                    
+                    // User-specific notifications (e.g., support ticket responses)
+                    if ($user) {
+                        $q->orWhere('user_id', $user->id);
                     }
                 })
                 ->ordered()

@@ -11,6 +11,7 @@ class Notification extends Model
         'title',
         'message',
         'category_id',
+        'user_id',
         'type',
         'action_url',
         'action_text',
@@ -23,6 +24,7 @@ class Notification extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'category_id' => 'integer',
+        'user_id' => 'integer',
         'scheduled_at' => 'datetime',
         'expires_at' => 'datetime',
         'priority' => 'integer',

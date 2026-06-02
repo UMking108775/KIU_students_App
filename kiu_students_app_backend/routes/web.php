@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContentController;
+use App\Http\Controllers\Admin\ImportantLinkController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -28,6 +29,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('contents', ContentController::class);
         
         // User Management routes
+        Route::post('/users/bulk-category-access', [\App\Http\Controllers\Admin\UserController::class, 'bulkCategoryAccess'])->name('users.bulk-category-access');
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
         Route::get('/users/{id}/category-access', [\App\Http\Controllers\Admin\UserController::class, 'categoryAccess'])->name('users.category-access');
         Route::put('/users/{id}/category-access', [\App\Http\Controllers\Admin\UserController::class, 'updateCategoryAccess'])->name('users.update-category-access');
@@ -41,6 +43,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         // Notifications routes
         Route::resource('notifications', \App\Http\Controllers\Admin\NotificationController::class);
+        
+        // Important Links routes
+        Route::resource('important-links', ImportantLinkController::class);
         
         // API Documentation
         Route::get('/api-docs', [\App\Http\Controllers\Admin\ApiController::class, 'index'])->name('api.index');

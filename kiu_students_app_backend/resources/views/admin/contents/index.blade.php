@@ -87,9 +87,15 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">
-                                    {{ str_repeat('— ', $content->category->level - 1) }}{{ $content->category->title }}
+                                    @if($content->category)
+                                        {{ str_repeat('— ', $content->category->level - 1) }}{{ $content->category->title }}
+                                    @else
+                                        <span class="text-gray-400">Uncategorized</span>
+                                    @endif
                                 </div>
-                                <div class="text-xs text-gray-500">Level {{ $content->category->level }}</div>
+                                @if($content->category)
+                                    <div class="text-xs text-gray-500">Level {{ $content->category->level }}</div>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($content->content_type === 'pdf')

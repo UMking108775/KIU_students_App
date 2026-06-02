@@ -20,10 +20,14 @@ class ContentController extends Controller
     public function index(Request $request, $categoryId)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
 
-            // Check if user has access to this category
-            if (!$user->hasAccessToCategoryAndParents($categoryId)) {
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
+
+            // Check if user has access to this category (if authenticated)
+            if ($user && !$user->hasAccessToCategoryAndParents($categoryId)) {
                 return $this->unauthorizedResponse('You do not have access to this category');
             }
 
@@ -68,7 +72,11 @@ class ContentController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
+
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
 
             $content = Content::active()
                 ->with('category')
@@ -78,8 +86,8 @@ class ContentController extends Controller
                 return $this->notFoundResponse('Content not found or inactive');
             }
 
-            // Check if user has access to the content's category
-            if (!$user->hasAccessToCategoryAndParents($content->category_id)) {
+            // Check if user has access to the content's category (if authenticated)
+            if ($user && !$user->hasAccessToCategoryAndParents($content->category_id)) {
                 return $this->unauthorizedResponse('You do not have access to this content');
             }
 
@@ -103,7 +111,11 @@ class ContentController extends Controller
     public function all(Request $request)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
+
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
 
             // Get all active contents
             $allContents = Content::active()
@@ -111,10 +123,14 @@ class ContentController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            // Filter contents based on user's category access
-            $accessibleContents = $allContents->filter(function ($content) use ($user) {
-                return $user->hasAccessToCategoryAndParents($content->category_id);
-            });
+            // Filter contents based on user's category access (if authenticated)
+            if ($user) {
+                $accessibleContents = $allContents->filter(function ($content) use ($user) {
+                    return $user->hasAccessToCategoryAndParents($content->category_id);
+                });
+            } else {
+                $accessibleContents = $allContents;
+            }
 
             return $this->successResponse(
                 [
@@ -138,7 +154,11 @@ class ContentController extends Controller
     public function search(Request $request)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
+
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
             $searchQuery = $request->input('query', '');
 
             if (empty($searchQuery)) {
@@ -152,10 +172,14 @@ class ContentController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            // Filter contents based on user's category access
-            $accessibleContents = $contents->filter(function ($content) use ($user) {
-                return $user->hasAccessToCategoryAndParents($content->category_id);
-            });
+            // Filter contents based on user's category access (if authenticated)
+            if ($user) {
+                $accessibleContents = $contents->filter(function ($content) use ($user) {
+                    return $user->hasAccessToCategoryAndParents($content->category_id);
+                });
+            } else {
+                $accessibleContents = $contents;
+            }
 
             return $this->successResponse(
                 [
@@ -180,7 +204,11 @@ class ContentController extends Controller
     public function byType(Request $request, $type)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
+
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
 
             // Get all active contents of specified type
             $contents = Content::active()
@@ -189,10 +217,14 @@ class ContentController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            // Filter contents based on user's category access
-            $accessibleContents = $contents->filter(function ($content) use ($user) {
-                return $user->hasAccessToCategoryAndParents($content->category_id);
-            });
+            // Filter contents based on user's category access (if authenticated)
+            if ($user) {
+                $accessibleContents = $contents->filter(function ($content) use ($user) {
+                    return $user->hasAccessToCategoryAndParents($content->category_id);
+                });
+            } else {
+                $accessibleContents = $contents;
+            }
 
             return $this->successResponse(
                 [

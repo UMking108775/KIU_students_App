@@ -21,6 +21,28 @@ Route::prefix('v1')->group(function () {
         Route::post('/register', [AuthController::class, 'register'])->name('api.register');
         Route::post('/login', [AuthController::class, 'login'])->name('api.login');
     });
+
+    // Categories (Publicly accessible for guest mode)
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\CategoryController::class, 'index'])->name('api.categories.index');
+        Route::get('/tree', [\App\Http\Controllers\Api\CategoryController::class, 'tree'])->name('api.categories.tree');
+        Route::get('/{id}', [\App\Http\Controllers\Api\CategoryController::class, 'show'])->name('api.categories.show');
+        Route::get('/{parentId}/subcategories', [\App\Http\Controllers\Api\CategoryController::class, 'subcategories'])->name('api.categories.subcategories');
+    });
+    
+    // Contents/Materials (Publicly accessible for guest mode)
+    Route::prefix('contents')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\ContentController::class, 'all'])->name('api.contents.all');
+        Route::get('/search', [\App\Http\Controllers\Api\ContentController::class, 'search'])->name('api.contents.search');
+        Route::get('/type/{type}', [\App\Http\Controllers\Api\ContentController::class, 'byType'])->name('api.contents.by-type');
+        Route::get('/{id}', [\App\Http\Controllers\Api\ContentController::class, 'show'])->name('api.contents.show');
+    });
+
+    // Get contents by category (works for all 3 levels)
+    Route::get('/categories/{categoryId}/contents', [\App\Http\Controllers\Api\ContentController::class, 'index'])->name('api.categories.contents');
+    
+    // Important Links (Publicly accessible)
+    Route::get('/important-links', [\App\Http\Controllers\Api\ImportantLinkController::class, 'index'])->name('api.important-links.index');
     
     // Protected Routes (Require Authentication)
     Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
@@ -33,25 +55,6 @@ Route::prefix('v1')->group(function () {
             Route::get('/user', [AuthController::class, 'user'])->name('api.user');
             Route::post('/update-profile', [AuthController::class, 'updateProfile'])->name('api.update-profile');
         });
-        
-        // Categories (with user access control)
-        Route::prefix('categories')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Api\CategoryController::class, 'index'])->name('api.categories.index');
-            Route::get('/tree', [\App\Http\Controllers\Api\CategoryController::class, 'tree'])->name('api.categories.tree');
-            Route::get('/{id}', [\App\Http\Controllers\Api\CategoryController::class, 'show'])->name('api.categories.show');
-            Route::get('/{parentId}/subcategories', [\App\Http\Controllers\Api\CategoryController::class, 'subcategories'])->name('api.categories.subcategories');
-        });
-        
-        // Contents/Materials (with user access control)
-        Route::prefix('contents')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Api\ContentController::class, 'all'])->name('api.contents.all');
-            Route::get('/search', [\App\Http\Controllers\Api\ContentController::class, 'search'])->name('api.contents.search');
-            Route::get('/type/{type}', [\App\Http\Controllers\Api\ContentController::class, 'byType'])->name('api.contents.by-type');
-            Route::get('/{id}', [\App\Http\Controllers\Api\ContentController::class, 'show'])->name('api.contents.show');
-        });
-        
-        // Get contents by category (works for all 3 levels)
-        Route::get('/categories/{categoryId}/contents', [\App\Http\Controllers\Api\ContentController::class, 'index'])->name('api.categories.contents');
         
         // Help & Support
         Route::prefix('support')->group(function () {

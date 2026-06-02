@@ -1,0 +1,97 @@
+name: kiu_students_app
+description: "KIU Students Material App - Access study materials and resources"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Icons
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+
+  # HTTP & API
+  http: ^1.2.2
+
+  # State Management
+  provider: ^6.1.2
+
+  # Storage
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.3
+
+  # URL Launcher
+  url_launcher: ^6.3.1
+
+  # Connectivity
+  connectivity_plus: ^6.1.1
+
+  # Audio Player
+  just_audio: ^0.9.43
+  audio_video_progress_bar: ^2.0.3
+
+  # File Downloads & Storage
+  path_provider: ^2.1.5
+  dio: ^5.7.0
+  permission_handler: ^12.0.1
+
+  # Scan & Make PDF tool
+  cunning_document_scanner: ^1.4.0   # Native ML Kit document scanner (auto-crop + filters)
+  image_picker: ^1.2.2               # Pick existing images from gallery
+  pdf: ^3.12.0                       # Build PDF from images
+  image: ^4.5.0                      # Compress/resize pages for small PDF files
+  share_plus: ^12.0.2                # Share created PDF (WhatsApp/email)
+  flutter_file_dialog: ^3.0.3        # "Save As" / pick PDF via system file manager (SAF)
+
+  # PDF Organizer tool
+  syncfusion_flutter_pdf: ^33.2.8    # Lossless reorder/delete of existing PDF pages
+  printing: ^5.14.3                  # Render PDF page thumbnails for the organizer
+  
+  # Cached Network Images (for offline image support)
+  cached_network_image: ^3.4.1
+
+  # PDF Viewer - Uses native platform renderers for fast performance
+  flutter_pdfview: ^1.3.2
+  intl: ^0.20.2
+
+  # WebView
+  webview_flutter: ^4.10.0
+  webview_flutter_android: ^4.10.11  # Android file upload + JS dialogs in WebView
+
+  # Local Notifications
+  flutter_local_notifications: ^18.0.1
+
+  # Background Tasks
+  workmanager: ^0.9.0
+  device_info_plus: ^12.3.0
+  timeago: ^3.7.1
+  
+  # Package Info (for version display)
+  package_info_plus: ^8.0.0
+  just_audio_background: ^0.0.1-beta.17
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/

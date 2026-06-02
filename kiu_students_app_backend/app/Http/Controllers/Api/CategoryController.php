@@ -18,7 +18,11 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
+
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
             
             // Get all active level 1 categories
             $categories = Category::active()
@@ -27,10 +31,15 @@ class CategoryController extends Controller
                 ->withCount('contents')
                 ->get();
 
-            // Filter categories based on user access
-            $accessibleCategories = $categories->filter(function ($category) use ($user) {
-                return $user->hasAccessToCategory($category->id);
-            });
+            // Filter categories based on user access (if authenticated)
+            if ($user) {
+                $accessibleCategories = $categories->filter(function ($category) use ($user) {
+                    return $user->hasAccessToCategory($category->id);
+                });
+            } else {
+                // Guest access: return all active categories
+                $accessibleCategories = $categories;
+            }
 
             return $this->successResponse(
                 CategoryResource::collection($accessibleCategories),
@@ -51,10 +60,14 @@ class CategoryController extends Controller
     public function subcategories(Request $request, $parentId)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
 
-            // Check if user has access to parent category
-            if (!$user->hasAccessToCategory($parentId)) {
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
+
+            // Check if user has access to parent category (if authenticated)
+            if ($user && !$user->hasAccessToCategory($parentId)) {
                 return $this->unauthorizedResponse('You do not have access to this category');
             }
 
@@ -73,9 +86,13 @@ class CategoryController extends Controller
                 ->get();
 
             // Filter subcategories based on user access
-            $accessibleSubcategories = $subcategories->filter(function ($category) use ($user) {
-                return $user->hasAccessToCategory($category->id);
-            });
+            if ($user) {
+                $accessibleSubcategories = $subcategories->filter(function ($category) use ($user) {
+                    return $user->hasAccessToCategory($category->id);
+                });
+            } else {
+                $accessibleSubcategories = $subcategories;
+            }
 
             return $this->successResponse(
                 CategoryResource::collection($accessibleSubcategories),
@@ -96,10 +113,14 @@ class CategoryController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
 
-            // Check if user has access to this category
-            if (!$user->hasAccessToCategoryAndParents($id)) {
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
+
+            // Check if user has access to this category (if authenticated)
+            if ($user && !$user->hasAccessToCategoryAndParents($id)) {
                 return $this->unauthorizedResponse('You do not have access to this category');
             }
 
@@ -112,8 +133,8 @@ class CategoryController extends Controller
                 return $this->notFoundResponse('Category not found or inactive');
             }
 
-            // Filter children based on user access
-            if ($category->children) {
+            // Filter children based on user access (if authenticated)
+            if ($user && $category->children) {
                 $category->children = $category->children->filter(function ($child) use ($user) {
                     return $user->hasAccessToCategory($child->id);
                 });
@@ -138,7 +159,11 @@ class CategoryController extends Controller
     public function tree(Request $request)
     {
         try {
-            $user = $request->user();
+            $user = auth('sanctum')->user();
+
+            if (!$user && $request->bearerToken()) {
+                 return $this->unauthorizedResponse('Unauthenticated');
+            }
 
             // Get all level 1 categories with nested children
             $categories = Category::active()
@@ -150,32 +175,36 @@ class CategoryController extends Controller
                 }])
                 ->get();
 
-            // Filter tree based on user access
-            $accessibleTree = $categories->filter(function ($category) use ($user) {
-                if (!$user->hasAccessToCategory($category->id)) {
-                    return false;
-                }
+            // Filter tree based on user access (if authenticated)
+            if ($user) {
+                $accessibleTree = $categories->filter(function ($category) use ($user) {
+                    if (!$user->hasAccessToCategory($category->id)) {
+                        return false;
+                    }
 
-                // Filter level 2 children
-                if ($category->children) {
-                    $category->children = $category->children->filter(function ($child) use ($user) {
-                        if (!$user->hasAccessToCategory($child->id)) {
-                            return false;
-                        }
+                    // Filter level 2 children
+                    if ($category->children) {
+                        $category->children = $category->children->filter(function ($child) use ($user) {
+                            if (!$user->hasAccessToCategory($child->id)) {
+                                return false;
+                            }
 
-                        // Filter level 3 children
-                        if ($child->children) {
-                            $child->children = $child->children->filter(function ($grandchild) use ($user) {
-                                return $user->hasAccessToCategory($grandchild->id);
-                            });
-                        }
+                            // Filter level 3 children
+                            if ($child->children) {
+                                $child->children = $child->children->filter(function ($grandchild) use ($user) {
+                                    return $user->hasAccessToCategory($grandchild->id);
+                                });
+                            }
 
-                        return true;
-                    });
-                }
+                            return true;
+                        });
+                    }
 
-                return true;
-            });
+                    return true;
+                });
+            } else {
+                $accessibleTree = $categories;
+            }
 
             return $this->successResponse(
                 CategoryResource::collection($accessibleTree),

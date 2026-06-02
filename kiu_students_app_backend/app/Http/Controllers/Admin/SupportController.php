@@ -71,6 +71,18 @@ class SupportController extends Controller
 
         $ticket->update($validated);
 
+        // Create notification for the user who submitted the ticket
+        if ($ticket->user_id) {
+            \App\Models\Notification::create([
+                'title' => 'Support Ticket Update',
+                'message' => "Your support ticket \"{$ticket->subject}\" has received a response. Status: " . ucfirst(str_replace('_', ' ', $validated['status'])),
+                'type' => 'info',
+                'user_id' => $ticket->user_id,
+                'is_active' => true,
+                'priority' => 50,
+            ]);
+        }
+
         return redirect()->route('admin.support.show', $ticket->id)
             ->with('success', 'Response sent successfully!');
     }

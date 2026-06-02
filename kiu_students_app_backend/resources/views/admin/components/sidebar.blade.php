@@ -117,6 +117,13 @@
                 @endif
             </a>
             
+            <a href="{{ route('admin.important-links.index') }}" class="flex items-center px-3 py-2.5 mb-1 rounded-lg transition-all {{ request()->routeIs('admin.important-links.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+                <span class="text-sm font-medium">Important Links</span>
+            </a>
+            
             <!-- API Section -->
             <div class="mt-6 mb-2">
                 <div class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Developer</div>
