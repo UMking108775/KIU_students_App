@@ -1,1 +1,42 @@
-# kiu_students_app_android/
+# Zip files - never commit these
+*.zip
+
+# Keystore files - security risk, never commit
+*.jks
+*.keystore
+upload-keystore.jks
+
+# Build artifacts
+**/build/
+**/android/build/
+
+# Response/debug files
+response.json
+
+# Flutter/Dart
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/.pub/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.class
+*.pyc
+*.swp
+
+# Laravel vendor (backend) - use composer install instead
+kiu_students_app_backend/vendor/
+kiu_students_app_backend/node_modules/
