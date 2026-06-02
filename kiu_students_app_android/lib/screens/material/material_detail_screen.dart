@@ -302,8 +302,8 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     final colors = AppColors.of(context);
     final typeColor = _getTypeColor(colors);
 
-    return ChangeNotifierProvider(
-      create: (_) => _zoomDrawerController,
+    return ChangeNotifierProvider.value(
+      value: _zoomDrawerController,
       child: ZoomDrawer(
         controller: _zoomDrawerController,
         menuScreen: const AppDrawer(),

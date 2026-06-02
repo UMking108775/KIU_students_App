@@ -31,8 +31,8 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    return ChangeNotifierProvider(
-      create: (_) => _zoomDrawerController,
+    return ChangeNotifierProvider.value(
+      value: _zoomDrawerController,
       child: ZoomDrawer(
         controller: _zoomDrawerController,
         menuScreen: const AppDrawer(),

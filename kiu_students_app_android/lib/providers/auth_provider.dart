@@ -150,19 +150,24 @@ class AuthProvider extends ChangeNotifier {
     if (_handlingSessionExpiry) return false;
     if (_user == null && !_isGuestMode) return false; // already logged out / nothing to do
     _handlingSessionExpiry = true;
-    await _authService.clearSession();
     try {
-      await AudioService().stop();
-      await CacheService().clearAllCache();
-    } catch (e) {
-      debugPrint('Error clearing data on session expiry: $e');
+      await _authService.clearSession();
+      try {
+        await AudioService().stop();
+        await CacheService().clearAllCache();
+      } catch (e) {
+        debugPrint('Error clearing data on session expiry: $e');
+      }
+      _user = null;
+      _isGuestMode = false;
+      _errorMessage = 'Your session has expired. Please log in again.';
+      notifyListeners();
+      return true;
+    } finally {
+      // Always reset the guard, even if a listener throws during
+      // notifyListeners(), so session-expiry handling never gets stuck off.
+      _handlingSessionExpiry = false;
     }
-    _user = null;
-    _isGuestMode = false;
-    _errorMessage = 'Your session has expired. Please log in again.';
-    notifyListeners();
-    _handlingSessionExpiry = false;
-    return true;
   }
 
   /// Clear error message

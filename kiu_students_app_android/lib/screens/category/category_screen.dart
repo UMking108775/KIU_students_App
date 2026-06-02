@@ -441,8 +441,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
     // Get theme colors
     final colors = AppColors.of(context);
 
-    return ChangeNotifierProvider(
-      create: (_) => _zoomDrawerController,
+    return ChangeNotifierProvider.value(
+      value: _zoomDrawerController,
       child: ZoomDrawer(
         controller: _zoomDrawerController,
         menuScreen: const AppDrawer(),

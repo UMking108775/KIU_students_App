@@ -29,8 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = authProvider.user;
     final colors = AppColors.of(context);
 
-    return ChangeNotifierProvider(
-      create: (_) => _zoomDrawerController,
+    return ChangeNotifierProvider.value(
+      value: _zoomDrawerController,
       child: ZoomDrawer(
         controller: _zoomDrawerController,
         menuScreen: const AppDrawer(),
