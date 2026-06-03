@@ -468,10 +468,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 const SizedBox(width: 10),
                 Text(
                   'KIU Students',
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  // Color intentionally omitted: inherit the AppBar's
+                  // foreground (white in light mode, light-slate in dark)
+                  // so the title is never black on the dark app bar.
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),

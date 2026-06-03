@@ -4,6 +4,7 @@ import '../../config/app_theme.dart';
 import '../../widgets/common/zoom_drawer.dart';
 import '../../widgets/home/app_drawer.dart';
 import 'scan_to_pdf_screen.dart';
+import 'assignment_list_screen.dart';
 import 'pdf_organizer_screen.dart';
 import 'pdf_compress_screen.dart';
 import 'pdf_split_screen.dart';
@@ -85,10 +86,20 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
               ),
             ),
             _ToolCard(
+              icon: Icons.edit_note_rounded,
+              title: 'Write Assignment',
+              subtitle: 'Urdu editor → PDF',
+              gradient: [colors.accent, colors.accentLight],
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AssignmentListScreen()),
+              ),
+            ),
+            _ToolCard(
               icon: Icons.reorder_rounded,
               title: 'Organize PDF',
               subtitle: 'Reorder / delete pages',
-              gradient: [colors.accent, colors.accentLight],
+              gradient: [colors.primary, colors.primaryLight],
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const PdfOrganizerScreen()),

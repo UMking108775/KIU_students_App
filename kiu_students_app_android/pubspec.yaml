@@ -74,6 +74,8 @@ dependencies:
   # Package Info (for version display)
   package_info_plus: ^8.0.0
   just_audio_background: ^0.0.1-beta.17
+  flutter_quill: ^11.5.0
+  vsc_quill_delta_to_html: ^1.0.5    # Delta → HTML for the browser-based PDF export
 
 dev_dependencies:
   flutter_test:
@@ -95,3 +97,18 @@ flutter:
 
   assets:
     - assets/images/
+
+  # Local fonts for the Assignment Writer. Bundled so the editor and the
+  # exported PDF render identically and fully offline. The PDF is produced by
+  # rendering the on-screen page to images, so these fonts (Nastaliq included)
+  # appear in the PDF exactly as typed — dart-pdf cannot shape them on its own.
+  fonts:
+    - family: Noto Nastaliq Urdu   # Urdu (Nastaliq) — Google Fonts, full Urdu coverage
+      fonts:
+        - asset: assets/fonts/NotoNastaliqUrdu-Regular.ttf
+    - family: Bahij Karim          # Arabic / Pashto (Naskh)
+      fonts:
+        - asset: assets/fonts/BahijKarim-Regular.ttf
+    - family: Bahij Nassim         # Arabic / Pashto (Naskh)
+      fonts:
+        - asset: assets/fonts/BahijNassim-Regular.ttf

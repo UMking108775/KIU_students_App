@@ -247,6 +247,18 @@ class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        // Explicit title/content colors so dialog headings (e.g. "Delete?")
+        // adapt to the theme instead of falling back to the non-adaptive
+        // default (which renders near-black in both light and dark modes).
+        titleTextStyle: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
+        contentTextStyle: GoogleFonts.poppins(
+          fontSize: 14,
+          color: AppColors.textSecondary,
+        ),
       ),
 
       // SnackBar Theme
@@ -347,6 +359,18 @@ class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: AppColorsDark.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        // Explicit title/content colors so dialog headings (e.g. "Delete?")
+        // are light on the dark dialog surface instead of falling back to the
+        // non-adaptive near-black default.
+        titleTextStyle: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: AppColorsDark.textPrimary,
+        ),
+        contentTextStyle: GoogleFonts.poppins(
+          fontSize: 14,
+          color: AppColorsDark.textSecondary,
+        ),
       ),
 
       // SnackBar Theme
