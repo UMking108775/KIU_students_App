@@ -1,7 +1,10 @@
 package android.print;
 
 import android.os.CancellationSignal;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
 import java.io.File;
 
@@ -20,6 +23,10 @@ public class PdfPrint {
         void onFailure(String message);
     }
 
+    private static final String TAG = "KiuPdf";
+    /** Safety timeout (ms) for the print adapter callbacks. */
+    private static final long TIMEOUT_MS = 30_000;
+
     private final PrintAttributes printAttributes;
 
     public PdfPrint(PrintAttributes printAttributes) {
@@ -30,39 +37,104 @@ public class PdfPrint {
                       final File dir,
                       final String fileName,
                       final CallbackPrint callback) {
+
+        // Guard against double callback invocations (e.g. timeout + late success).
+        final boolean[] done = {false};
+        final CallbackPrint safe = new CallbackPrint() {
+            @Override
+            public void success(String absolutePath) {
+                synchronized (done) {
+                    if (done[0]) return;
+                    done[0] = true;
+                }
+                callback.success(absolutePath);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                synchronized (done) {
+                    if (done[0]) return;
+                    done[0] = true;
+                }
+                callback.onFailure(message);
+            }
+        };
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+
+        // Safety timeout: if onLayout never calls back, fail gracefully.
+        final Runnable layoutTimeout = () -> {
+            Log.e(TAG, "onLayout timeout (" + TIMEOUT_MS + "ms)");
+            safe.onFailure("PDF layout timed out. Please try again.");
+        };
+        handler.postDelayed(layoutTimeout, TIMEOUT_MS);
+
+        Log.d(TAG, "PdfPrint.onLayout start");
         adapter.onLayout(null, printAttributes, null,
             new PrintDocumentAdapter.LayoutResultCallback() {
                 @Override
                 public void onLayoutFinished(PrintDocumentInfo info, boolean changed) {
+                    handler.removeCallbacks(layoutTimeout);
+                    Log.d(TAG, "onLayoutFinished -> onWrite");
                     final ParcelFileDescriptor pfd = getOutputFile(dir, fileName);
                     if (pfd == null) {
-                        callback.onFailure("Could not open the output file.");
+                        safe.onFailure("Could not open the output file.");
                         return;
                     }
+
+                    // Safety timeout for the write phase.
+                    final Runnable writeTimeout = () -> {
+                        Log.e(TAG, "onWrite timeout (" + TIMEOUT_MS + "ms)");
+                        try { pfd.close(); } catch (Exception ignored) {}
+                        safe.onFailure("PDF writing timed out. Please try again.");
+                    };
+                    handler.postDelayed(writeTimeout, TIMEOUT_MS);
+
                     adapter.onWrite(new PageRange[]{PageRange.ALL_PAGES}, pfd,
                         new CancellationSignal(),
                         new PrintDocumentAdapter.WriteResultCallback() {
                             @Override
                             public void onWriteFinished(PageRange[] pages) {
+                                handler.removeCallbacks(writeTimeout);
+                                Log.d(TAG, "onWriteFinished pages=" + (pages == null ? "null" : pages.length));
                                 try { pfd.close(); } catch (Exception ignored) {}
                                 if (pages != null && pages.length > 0) {
-                                    callback.success(new File(dir, fileName).getAbsolutePath());
+                                    safe.success(new File(dir, fileName).getAbsolutePath());
                                 } else {
-                                    callback.onFailure("No pages were written.");
+                                    safe.onFailure("No pages were written.");
                                 }
                             }
 
                             @Override
                             public void onWriteFailed(CharSequence error) {
+                                handler.removeCallbacks(writeTimeout);
+                                Log.e(TAG, "onWriteFailed: " + error);
                                 try { pfd.close(); } catch (Exception ignored) {}
-                                callback.onFailure(error != null ? error.toString() : "Write failed.");
+                                safe.onFailure(error != null ? error.toString() : "Write failed.");
+                            }
+
+                            @Override
+                            public void onWriteCancelled() {
+                                handler.removeCallbacks(writeTimeout);
+                                Log.e(TAG, "onWriteCancelled");
+                                try { pfd.close(); } catch (Exception ignored) {}
+                                safe.onFailure("PDF writing was cancelled.");
                             }
                         });
                 }
 
                 @Override
                 public void onLayoutFailed(CharSequence error) {
-                    callback.onFailure(error != null ? error.toString() : "Layout failed.");
+                    handler.removeCallbacks(layoutTimeout);
+                    Log.e(TAG, "onLayoutFailed: " + error);
+                    safe.onFailure(error != null ? error.toString() : "Layout failed.");
+                }
+
+                @Override
+                public void onLayoutCancelled() {
+                    handler.removeCallbacks(layoutTimeout);
+                    Log.e(TAG, "onLayoutCancelled");
+                    safe.onFailure("PDF layout was cancelled.");
                 }
             }, null);
     }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
 import 'config/app_routes.dart';
@@ -86,9 +85,6 @@ class KIUStudentsApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.materialThemeMode,
-            // Required by the rich-text assignment editor (flutter_quill).
-            localizationsDelegates: FlutterQuillLocalizations.localizationsDelegates,
-            supportedLocales: FlutterQuillLocalizations.supportedLocales,
             initialRoute: AppRoutes.initial,
             routes: AppRoutes.routes,
           );

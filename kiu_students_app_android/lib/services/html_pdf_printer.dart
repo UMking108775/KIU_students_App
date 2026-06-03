@@ -34,7 +34,7 @@ class HtmlPdfPrinter {
         'widthMils': widthMils,
         'heightMils': heightMils,
         'marginMils': marginMils,
-      }).timeout(const Duration(seconds: 40));
+      }).timeout(const Duration(seconds: 60));
 
       final path = result ?? outPath;
       final file = File(path);
@@ -42,6 +42,11 @@ class HtmlPdfPrinter {
         throw Exception('The PDF was not produced.');
       }
       return file;
+    } on TimeoutException {
+      throw Exception(
+        'PDF export timed out. The device may be low on memory. '
+        'Please close other apps and try again.',
+      );
     } finally {
       try {
         await htmlFile.delete();
@@ -50,4 +55,24 @@ class HtmlPdfPrinter {
       }
     }
   }
+
+  /// Reads the system clipboard (Android's ClipboardManager) and returns both
+  /// its `html` (when the source provided rich HTML, e.g. Word / Docs / the web)
+  /// and its `text` (the plain text, e.g. the Markdown an AI app copies). Either
+  /// value may be null/empty. Returns null only if the channel call fails.
+  Future<({String? html, String? text})?> readClipboard() async {
+    try {
+      final result = await _channel
+          .invokeMethod<Map<dynamic, dynamic>>('readClipboard')
+          .timeout(const Duration(seconds: 2));
+      if (result == null) return (html: null, text: null);
+      return (
+        html: result['html'] as String?,
+        text: result['text'] as String?,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }
+

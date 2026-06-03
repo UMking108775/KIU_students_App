@@ -8,14 +8,20 @@ import 'package:path_provider/path_provider.dart';
 class AssignmentDraft {
   final String id;
   final String title;
+
+  /// Legacy Quill delta (older drafts). New drafts use [html].
   final List<dynamic> delta;
+
+  /// The editor content as HTML (the WebView editor's `contenteditable` body).
+  final String html;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const AssignmentDraft({
     required this.id,
     required this.title,
-    required this.delta,
+    this.delta = const <dynamic>[],
+    this.html = '',
     required this.createdAt,
     required this.updatedAt,
   });
@@ -24,6 +30,7 @@ class AssignmentDraft {
         'id': id,
         'title': title,
         'delta': delta,
+        'html': html,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
       };
@@ -32,12 +39,19 @@ class AssignmentDraft {
         id: json['id'] as String,
         title: json['title'] as String? ?? 'Untitled',
         delta: (json['delta'] as List<dynamic>?) ?? const <dynamic>[],
+        html: json['html'] as String? ?? '',
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
       );
 
   /// A short plain-text preview of the content for the drafts list.
   String get preview {
+    if (html.isNotEmpty) {
+      return html
+          .replaceAll(RegExp(r'<[^>]*>'), ' ')
+          .replaceAll(RegExp(r'\s+'), ' ')
+          .trim();
+    }
     final sb = StringBuffer();
     for (final op in delta) {
       if (op is Map && op['insert'] is String) {

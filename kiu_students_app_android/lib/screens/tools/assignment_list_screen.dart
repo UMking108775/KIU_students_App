@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import '../../config/app_theme.dart';
 import '../../services/assignment_draft_service.dart';
-import 'assignment_editor_screen.dart';
+import 'web_assignment_editor_screen.dart';
 
 /// Lists saved assignment drafts and lets the student open or create one.
 class AssignmentListScreen extends StatefulWidget {
@@ -36,7 +36,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
   Future<void> _openEditor([AssignmentDraft? draft]) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => AssignmentEditorScreen(draft: draft)),
+      MaterialPageRoute(builder: (_) => WebAssignmentEditorScreen(draft: draft)),
     );
     _load(); // refresh after returning
   }

@@ -1,0 +1,977 @@
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/VRI[PopupWindow:22d042b]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb4000073965482d0
+D/BufferQueueConsumer( 7037): [](id:1b7d00000007,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:22d042b]#5](f:0,a:1) acquireNextBufferLocked size=40x48 mFrameNumber=1 applyTransaction=true mTimestamp=78998965686323(auto) mPendingTransactions.size=0 graphicBufferId=30223684861999 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/BufferQueueConsumer( 7037): [](id:1b7d00000008,api:0,p:-1,c:7037) connect: controlledByApp=false
+I/GED     ( 7037): ged_boost_gpu_freq, level 100, eOrigin 2, final_idx 31, oppidx_max 31, oppidx_min 0
+D/BLASTBufferQueue( 7037): [magnifier surface#6](f:0,a:1) acquireNextBufferLocked size=216x112 mFrameNumber=1 applyTransaction=true mTimestamp=78999081655861(auto) mPendingTransactions.size=0 graphicBufferId=30223684862005 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/BLASTBufferQueue( 7037): [magnifier surface#6](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [magnifier surface#6(BLAST Consumer)6](id:1b7d00000008,api:0,p:-1,c:7037) disconnect
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F...... 0,0-720,1340 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/androidtc( 7037): Initializing SystemTextClassifier, type = System
+W/androidtc( 7037): TextClassifier called on main thread
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F....I. 0,0-720,1340 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+W/OnBackInvokedCallback( 7037): OnBackInvokedCallback is not enabled for the application.
+W/OnBackInvokedCallback( 7037): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{204f4e9 V.E...... R.....ID 0,0-40,48}
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:22d042b]#5](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:22d042b]#5(BLAST Consumer)5](id:1b7d00000007,api:0,p:-1,c:7037) disconnect
+D/InputTransport( 7037): Destroy ARC handle: 0xb4000073965482d0
+D/VRI[PopupWindow:7437a7a]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb400007396549b00
+D/VRI[PopupWindow:3190ba3]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb400007396547700
+W/androidtc( 7037): TextClassifier called on main thread
+D/os.SingleLice( 7037): instance successfully. com.transsion.widget.v2.FloatingToolbarLice@d324c1b from com.transsion.widget.FloatingToolbarLiceFactory
+D/os.SingleLiceFactory( 7037): instance successfully. com.transsion.widget.v2.FloatingToolbarLice@d324c1b from com.android.internal.IInternalViewLice
+D/CompatibilityChangeReporter( 7037): Compat change id reported: 210923482; UID 10907; state: ENABLED
+D/VRI[PopupWindow:86cad92]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb4000073965c7980
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/BufferQueueConsumer( 7037): [](id:1b7d00000009,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:7437a7a]#7](f:0,a:1) acquireNextBufferLocked size=88x44 mFrameNumber=1 applyTransaction=true mTimestamp=79001987992784(auto) mPendingTransactions.size=0 graphicBufferId=30223684862006 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/BufferQueueConsumer( 7037): [](id:1b7d0000000a,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:3190ba3]#8](f:0,a:1) acquireNextBufferLocked size=88x44 mFrameNumber=1 applyTransaction=true mTimestamp=79002014769784(auto) mPendingTransactions.size=0 graphicBufferId=30223684862012 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/BufferQueueConsumer( 7037): [](id:1b7d0000000b,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#9](f:0,a:1) acquireNextBufferLocked size=630x116 mFrameNumber=1 applyTransaction=true mTimestamp=79002053206015(auto) mPendingTransactions.size=0 graphicBufferId=30223684862023 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{9cfb151 V.E...... R......D 0,0-630,116}
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#9](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:86cad92]#9(BLAST Consumer)9](id:1b7d0000000b,api:0,p:-1,c:7037) disconnect
+D/InputTransport( 7037): Destroy ARC handle: 0xb4000073965c7980
+D/VRI[PopupWindow:86cad92]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb4000073965ca9e0
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/BufferQueueConsumer( 7037): [](id:1b7d0000000c,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#10](f:0,a:1) acquireNextBufferLocked size=630x116 mFrameNumber=1 applyTransaction=true mTimestamp=79002548822400(auto) mPendingTransactions.size=0 graphicBufferId=30223684862029 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 4614KB AllocSpace bytes, 24(816KB) LOS objects, 43% free, 6550KB/11MB, paused 2.548ms,6.449ms total 84.796ms
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{ad9caee V.E...... R......D 0,0-630,116}
+D/InputTransport( 7037): Destroy ARC handle: 0xb4000073965ca9e0
+D/VRI[PopupWindow:86cad92]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#10](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:86cad92]#10(BLAST Consumer)10](id:1b7d0000000c,api:0,p:-1,c:7037) disconnect
+D/InputTransport( 7037): Create ARC handle: 0xb4000073965c3b10
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/BufferQueueConsumer( 7037): [](id:1b7d0000000d,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#11](f:0,a:1) acquireNextBufferLocked size=630x116 mFrameNumber=1 applyTransaction=true mTimestamp=79002747355015(auto) mPendingTransactions.size=0 graphicBufferId=30223684862035 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{2746008 V.E...... R......D 0,0-630,116}
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#11](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:86cad92]#11(BLAST Consumer)11](id:1b7d0000000d,api:0,p:-1,c:7037) disconnect
+D/InputTransport( 7037): Destroy ARC handle: 0xb4000073965c3b10
+D/VRI[PopupWindow:86cad92]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb400007396548d20
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/BufferQueueConsumer( 7037): [](id:1b7d0000000e,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#12](f:0,a:1) acquireNextBufferLocked size=630x116 mFrameNumber=1 applyTransaction=true mTimestamp=79002867932169(auto) mPendingTransactions.size=0 graphicBufferId=30223684862038 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+W/androidtc( 7037): TextClassifier called on main thread
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F...... 0,0-720,755 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{84d5598 V.E...... R....... 0,0-88,44}
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:7437a7a]#7](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:7437a7a]#7(BLAST Consumer)7](id:1b7d00000009,api:0,p:-1,c:7037) disconnect
+D/InputTransport( 7037): Destroy ARC handle: 0xb400007396549b00
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{759c9c0 V.E...... R....... 0,0-88,44}
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:3190ba3]#8](f:0,a:1) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:3190ba3]#8(BLAST Consumer)8](id:1b7d0000000a,api:0,p:-1,c:7037) disconnect
+D/InputTransport( 7037): Destroy ARC handle: 0xb400007396547700
+D/VRI[PopupWindow:22d042b]( 7037): hardware acceleration = true, forceHwAccelerated = false
+D/InputTransport( 7037): Create ARC handle: 0xb4000073965c4a40
+D/BufferQueueConsumer( 7037): [](id:1b7d0000000f,api:0,p:-1,c:7037) connect: controlledByApp=false
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:22d042b]#13](f:0,a:1) acquireNextBufferLocked size=40x48 mFrameNumber=1 applyTransaction=true mTimestamp=79003639920785(auto) mPendingTransactions.size=0 graphicBufferId=30223684862042 transform=0
+W/Parcel  ( 7037): Expecting binder but got null!
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/View    ( 7037): [Warning] assignParent to null: this = android.widget.PopupWindow$PopupDecorView{1fc43e5 V.E...... R......D 0,0-630,116}
+D/InputTransport( 7037): Destroy ARC handle: 0xb400007396548d20
+D/BLASTBufferQueue( 7037): [VRI[PopupWindow:86cad92]#12](f:0,a:3) destructor()
+D/BufferQueueConsumer( 7037): [VRI[PopupWindow:86cad92]#12(BLAST Consumer)12](id:1b7d0000000e,api:0,p:-1,c:7037) disconnect
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F...... 0,0-720,755 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F...... 0,0-720,755 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F...... 0,0-720,755 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/InputMethodManager( 7037): showSoftInput() view=io.flutter.plugins.webviewflutter.WebViewProxyApi$WebViewPlatformView{a685211 VFEDHVC.. .F...... 0,0-720,755 aid=1073741824} flags=0 reason=SHOW_SOFT_INPUT
+D/InsetsController( 7037): show(ime(), fromIme=true)
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+I/ScrollIdentify( 7037): on fling
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/GPUAUX  ( 7037): [AUX]GuiExtAuxCheckAuxPath:670: Null anb
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/KiuPdf  ( 7037): htmlToPdf: w=4694 h=4954 m=472 html=/data/user/0/com.example.kiu_students_app/cache/Assignment_2026-06-03_1780483876893704.html
+D/KiuPdf  ( 7037): loadUrl
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/Surface ( 7037): lockHardwareCanvas
+E/FrameEvents( 7037): updateAcquireFence: Did not find frame.
+D/KiuPdf  ( 7037): onPageFinished (started=false)
+D/KiuPdf  ( 7037): writePdf: contentHeight=1636
+D/KiuPdf  ( 7037): PdfPrint.onLayout start
+D/KiuPdf  ( 7037): onLayoutFinished -> onWrite
+I/flutter ( 7037): [BackgroundSync] Starting silent sync...
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 4170KB AllocSpace bytes, 22(824KB) LOS objects, 49% free, 6323KB/12MB, paused 528us,6.738ms total 83.090ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2525KB AllocSpace bytes, 102(3864KB) LOS objects, 51% free, 6172KB/12MB, paused 832us,6.406ms total 59.520ms
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2702KB AllocSpace bytes, 106(3952KB) LOS objects, 49% free, 6118KB/11MB, paused 1.254ms,7.866ms total 74.030ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2453KB AllocSpace bytes, 96(3616KB) LOS objects, 49% free, 6226KB/11MB, paused 450us,9.207ms total 52.695ms
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2521KB AllocSpace bytes, 97(3652KB) LOS objects, 49% free, 5994KB/11MB, paused 756us,9.439ms total 81.803ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2369KB AllocSpace bytes, 96(3616KB) LOS objects, 50% free, 5966KB/11MB, paused 719us,5.754ms total 28.278ms
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2333KB AllocSpace bytes, 102(3800KB) LOS objects, 49% free, 5794KB/11MB, paused 1.212ms,7.828ms total 75.902ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2121KB AllocSpace bytes, 91(3572KB) LOS objects, 47% free, 6114KB/11MB, paused 489us,9.927ms total 47.816ms
+I/flutter ( 7037): [BackgroundSync] categories synced: 8 active roots
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 1482KB AllocSpace bytes, 85(3988KB) LOS objects, 49% free, 5958KB/11MB, paused 727us,7.408ms total 72.496ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2356KB AllocSpace bytes, 96(3552KB) LOS objects, 49% free, 5974KB/11MB, paused 563us,5.639ms total 30.276ms
+I/flutter ( 7037): [BackgroundSync] All content synced
+E/KiuPdf  ( 7037): onWrite timeout (30000ms)
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2569KB AllocSpace bytes, 95(3548KB) LOS objects, 49% free, 5910KB/11MB, paused 653us,7.326ms total 59.755ms
+I/flutter ( 7037): [BackgroundSync] Tickets synced: 0 items
+I/flutter ( 7037): [BackgroundSync] Sync completed successfully
+I/flutter ( 7037): [BackgroundSync] Starting silent sync...
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2257KB AllocSpace bytes, 96(3648KB) LOS objects, 50% free, 5886KB/11MB, paused 456us,7.005ms total 35.564ms
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2513KB AllocSpace bytes, 95(3588KB) LOS objects, 49% free, 5870KB/11MB, paused 793us,5.734ms total 54.743ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2265KB AllocSpace bytes, 94(3512KB) LOS objects, 49% free, 5910KB/11MB, paused 455us,7.583ms total 35.892ms
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2313KB AllocSpace bytes, 96(3584KB) LOS objects, 49% free, 5942KB/11MB, paused 450us,5.844ms total 55.070ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2293KB AllocSpace bytes, 98(3688KB) LOS objects, 49% free, 5978KB/11MB, paused 575us,7.322ms total 37.312ms
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 2297KB AllocSpace bytes, 98(3720KB) LOS objects, 49% free, 5990KB/11MB, paused 526us,6.903ms total 54.657ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2509KB AllocSpace bytes, 94(3480KB) LOS objects, 50% free, 5874KB/11MB, paused 376us,6.925ms total 30.633ms
+I/flutter ( 7037): [BackgroundSync] categories synced: 8 active roots
+I/iu_students_app( 7037): Background concurrent mark compact GC freed 1511KB AllocSpace bytes, 103(4836KB) LOS objects, 49% free, 5898KB/11MB, paused 648us,5.273ms total 48.555ms
+I/iu_students_app( 7037): Background young concurrent mark compact GC freed 2256KB AllocSpace bytes, 96(3552KB) LOS objects, 49% free, 5914KB/11MB, paused 386us,7.850ms total 32.403ms
+Lost connection to device.
+Terminate batch job (Y/N)? 

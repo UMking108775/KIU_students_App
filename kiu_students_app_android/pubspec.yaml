@@ -74,8 +74,6 @@ dependencies:
   # Package Info (for version display)
   package_info_plus: ^8.0.0
   just_audio_background: ^0.0.1-beta.17
-  flutter_quill: ^11.5.0
-  vsc_quill_delta_to_html: ^1.0.5    # Delta → HTML for the browser-based PDF export
 
 dev_dependencies:
   flutter_test:
