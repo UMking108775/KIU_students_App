@@ -7,7 +7,7 @@ import '../../services/pdf_split_service.dart';
 import 'my_pdfs_screen.dart';
 import 'widgets/pdf_source_selector.dart';
 
-enum _SplitMode { parts, size }
+enum _SplitMode { parts, size, everyN, range }
 
 /// Tool: split one PDF into several smaller PDFs, either by number of parts or
 /// by an approximate size limit per file.
@@ -30,6 +30,11 @@ class _PdfSplitScreenState extends State<PdfSplitScreen> {
   _SplitMode _mode = _SplitMode.parts;
   int _parts = 2;
   int _mb = 5;
+  int _kb = 500;
+  bool _sizeKb = false; // unit for "by size" mode (KB vs MB)
+  int _perFile = 1; // "every N pages" mode
+  int _rangeStart = 1; // "page range" mode
+  int _rangeEnd = 1;
 
   bool _loading = false;
   bool _splitting = false;
@@ -56,6 +61,9 @@ class _PdfSplitScreenState extends State<PdfSplitScreen> {
         _fileSize = bytes.length;
         _totalPages = pages;
         _parts = pages >= 2 ? 2 : 1;
+        _perFile = 1;
+        _rangeStart = 1;
+        _rangeEnd = pages;
         _loading = false;
       });
     } catch (e) {
@@ -70,9 +78,12 @@ class _PdfSplitScreenState extends State<PdfSplitScreen> {
     if (_mode == _SplitMode.parts) {
       return (_totalPages / _parts).ceil().clamp(1, _totalPages);
     }
+    if (_mode == _SplitMode.everyN) {
+      return _perFile.clamp(1, _totalPages);
+    }
     // by size: estimate from average page weight
     final avg = _totalPages > 0 ? _fileSize / _totalPages : _fileSize;
-    final target = _mb * 1024 * 1024;
+    final target = _sizeKb ? _kb * 1024 : _mb * 1024 * 1024;
     final per = avg > 0 ? (target / avg).floor() : _totalPages;
     return per.clamp(1, _totalPages);
   }
@@ -90,14 +101,26 @@ class _PdfSplitScreenState extends State<PdfSplitScreen> {
       final base = _source != null
           ? PdfCreatorService.displayName(_source!)
           : 'Document';
-      final files = await _service.splitByPageChunks(
-        sourceBytes: _sourceBytes!,
-        pagesPerPart: _pagesPerPart,
-        baseName: base,
-      );
-      if (!mounted) return;
-      setState(() => _splitting = false);
-      await _showDoneDialog(files.length);
+      if (_mode == _SplitMode.range) {
+        await _service.extractRange(
+          sourceBytes: _sourceBytes!,
+          startOneBased: _rangeStart,
+          endOneBased: _rangeEnd,
+          baseName: base,
+        );
+        if (!mounted) return;
+        setState(() => _splitting = false);
+        await _showDoneDialog(1);
+      } else {
+        final files = await _service.splitByPageChunks(
+          sourceBytes: _sourceBytes!,
+          pagesPerPart: _pagesPerPart,
+          baseName: base,
+        );
+        if (!mounted) return;
+        setState(() => _splitting = false);
+        await _showDoneDialog(files.length);
+      }
     } catch (e) {
       if (!mounted) return;
       setState(() => _splitting = false);
@@ -212,44 +235,22 @@ class _PdfSplitScreenState extends State<PdfSplitScreen> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 12),
-                SegmentedButton<_SplitMode>(
-                  segments: const [
-                    ButtonSegment(
-                      value: _SplitMode.parts,
-                      label: Text('By parts'),
-                      icon: Icon(Icons.grid_view_rounded, size: 18),
-                    ),
-                    ButtonSegment(
-                      value: _SplitMode.size,
-                      label: Text('By size'),
-                      icon: Icon(Icons.sd_storage_rounded, size: 18),
-                    ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _modeChip(colors, _SplitMode.parts,
+                        Icons.grid_view_rounded, 'Equal parts'),
+                    _modeChip(colors, _SplitMode.everyN,
+                        Icons.layers_rounded, 'Every N pages'),
+                    _modeChip(colors, _SplitMode.size,
+                        Icons.sd_storage_rounded, 'By size'),
+                    _modeChip(colors, _SplitMode.range,
+                        Icons.content_cut_rounded, 'Page range'),
                   ],
-                  selected: {_mode},
-                  onSelectionChanged: (s) =>
-                      setState(() => _mode = s.first),
                 ),
                 const SizedBox(height: 20),
-                if (_mode == _SplitMode.parts)
-                  _StepperRow(
-                    colors: colors,
-                    label: 'Number of parts',
-                    value: '$_parts',
-                    onMinus: _parts > 2
-                        ? () => setState(() => _parts--)
-                        : null,
-                    onPlus: _parts < _totalPages
-                        ? () => setState(() => _parts++)
-                        : null,
-                  )
-                else
-                  _StepperRow(
-                    colors: colors,
-                    label: 'Max size per file',
-                    value: '$_mb MB',
-                    onMinus: _mb > 1 ? () => setState(() => _mb--) : null,
-                    onPlus: _mb < 100 ? () => setState(() => _mb++) : null,
-                  ),
+                ..._modeControls(colors),
                 const SizedBox(height: 16),
                 _PreviewRow(colors: colors, text: _previewText()),
               ],
@@ -261,14 +262,161 @@ class _PdfSplitScreenState extends State<PdfSplitScreen> {
     );
   }
 
+  Widget _modeChip(
+      ThemeColors colors, _SplitMode mode, IconData icon, String label) {
+    final selected = _mode == mode;
+    return ChoiceChip(
+      selected: selected,
+      onSelected: (_) => setState(() => _mode = mode),
+      avatar: Icon(icon,
+          size: 16, color: selected ? Colors.white : colors.textSecondary),
+      label: Text(label),
+      labelStyle: TextStyle(
+        color: selected ? Colors.white : colors.textPrimary,
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+      ),
+      selectedColor: colors.primary,
+      backgroundColor: colors.surface,
+      showCheckmark: false,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: selected ? colors.primary : colors.border),
+      ),
+    );
+  }
+
+  Widget _unitToggle(ThemeColors colors) {
+    Widget chip(String label, bool kb) {
+      final sel = _sizeKb == kb;
+      return ChoiceChip(
+        selected: sel,
+        onSelected: (_) => setState(() => _sizeKb = kb),
+        label: Text(label),
+        labelStyle: TextStyle(
+          color: sel ? Colors.white : colors.textPrimary,
+          fontWeight: FontWeight.w600,
+          fontSize: 13,
+        ),
+        selectedColor: colors.primary,
+        backgroundColor: colors.surface,
+        showCheckmark: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: sel ? colors.primary : colors.border),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        Text('Unit', style: TextStyle(fontSize: 13, color: colors.textSecondary)),
+        const SizedBox(width: 12),
+        chip('KB', true),
+        const SizedBox(width: 8),
+        chip('MB', false),
+      ],
+    );
+  }
+
+  List<Widget> _modeControls(ThemeColors colors) {
+    switch (_mode) {
+      case _SplitMode.parts:
+        return [
+          _StepperRow(
+            colors: colors,
+            label: 'Number of parts',
+            value: '$_parts',
+            onMinus: _parts > 2 ? () => setState(() => _parts--) : null,
+            onPlus:
+                _parts < _totalPages ? () => setState(() => _parts++) : null,
+          ),
+        ];
+      case _SplitMode.everyN:
+        return [
+          _StepperRow(
+            colors: colors,
+            label: 'Pages per file',
+            value: '$_perFile',
+            onMinus: _perFile > 1 ? () => setState(() => _perFile--) : null,
+            onPlus: _perFile < _totalPages
+                ? () => setState(() => _perFile++)
+                : null,
+          ),
+        ];
+      case _SplitMode.size:
+        return [
+          _unitToggle(colors),
+          const SizedBox(height: 12),
+          if (_sizeKb)
+            _StepperRow(
+              colors: colors,
+              label: 'Max size per file',
+              value: '$_kb KB',
+              onMinus: _kb > 100 ? () => setState(() => _kb -= 100) : null,
+              onPlus: _kb < 5000 ? () => setState(() => _kb += 100) : null,
+            )
+          else
+            _StepperRow(
+              colors: colors,
+              label: 'Max size per file',
+              value: '$_mb MB',
+              onMinus: _mb > 1 ? () => setState(() => _mb--) : null,
+              onPlus: _mb < 100 ? () => setState(() => _mb++) : null,
+            ),
+        ];
+      case _SplitMode.range:
+        return [
+          _StepperRow(
+            colors: colors,
+            label: 'From page',
+            value: '$_rangeStart',
+            onMinus: _rangeStart > 1
+                ? () => setState(() {
+                      _rangeStart--;
+                      if (_rangeEnd < _rangeStart) _rangeEnd = _rangeStart;
+                    })
+                : null,
+            onPlus: _rangeStart < _totalPages
+                ? () => setState(() {
+                      _rangeStart++;
+                      if (_rangeEnd < _rangeStart) _rangeEnd = _rangeStart;
+                    })
+                : null,
+          ),
+          const SizedBox(height: 12),
+          _StepperRow(
+            colors: colors,
+            label: 'To page',
+            value: '$_rangeEnd',
+            onMinus: _rangeEnd > _rangeStart
+                ? () => setState(() => _rangeEnd--)
+                : null,
+            onPlus: _rangeEnd < _totalPages
+                ? () => setState(() => _rangeEnd++)
+                : null,
+          ),
+        ];
+    }
+  }
+
   String _previewText() {
+    if (_mode == _SplitMode.range) {
+      final n = (_rangeEnd - _rangeStart + 1).clamp(1, _totalPages);
+      return 'Creates 1 file with $n page${n == 1 ? '' : 's'} '
+          '(pages $_rangeStart–$_rangeEnd).';
+    }
     final files = _resultingFiles;
     final per = _pagesPerPart;
     if (_mode == _SplitMode.parts) {
-      return 'This will create about $files file${files == 1 ? '' : 's'}, '
+      return 'Creates about $files file${files == 1 ? '' : 's'}, '
           '~$per page${per == 1 ? '' : 's'} each.';
     }
-    return 'This will create about $files file${files == 1 ? '' : 's'} '
+    if (_mode == _SplitMode.everyN) {
+      return 'Creates $files file${files == 1 ? '' : 's'} of up to '
+          '$per page${per == 1 ? '' : 's'} each.';
+    }
+    return 'Creates about $files file${files == 1 ? '' : 's'} '
         '(~$per page${per == 1 ? '' : 's'} each). Sizes are approximate.';
   }
 

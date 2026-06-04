@@ -4,21 +4,22 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// Bridges to the native print framework to turn an HTML page into a real,
-/// paginated PDF (text stays vector/selectable; the browser engine paginates
-/// and shapes complex scripts). Android-only for now.
+/// Bridges to the native renderer that turns an HTML page into a real,
+/// paginated PDF. The native side tries the WebView print framework first
+/// (selectable vector text, exact CSS pages) and falls back to a canvas
+/// renderer if that hangs on a budget device. Android-only for now.
 class HtmlPdfPrinter {
   static const MethodChannel _channel = MethodChannel('com.kiu.assignment/pdf');
 
-  /// Writes [html] to a temp file, asks the native side to print it to a PDF,
-  /// and returns that PDF file. Times out so a stuck WebView can't hang forever
-  /// (the caller then falls back to the image exporter).
+  /// Writes [html] to a temp file, asks the native side to render it to a PDF
+  /// sized to [pageWidthPx] × [pageHeightPx] (CSS px — the editor's sheet size),
+  /// and returns that PDF file. Times out so a stuck WebView can't hang forever.
   Future<File> printToPdf(
     String html, {
     String name = 'assignment',
-    required int widthMils,
-    required int heightMils,
-    required int marginMils,
+    required int pageWidthPx,
+    required int pageHeightPx,
+    int marginPx = 36,
   }) async {
     final dir = await getTemporaryDirectory();
     final safe = name.replaceAll(RegExp(r'[^A-Za-z0-9_-]'), '_');
@@ -31,10 +32,10 @@ class HtmlPdfPrinter {
       final result = await _channel.invokeMethod<String>('htmlToPdf', {
         'htmlPath': htmlFile.path,
         'outputPath': outPath,
-        'widthMils': widthMils,
-        'heightMils': heightMils,
-        'marginMils': marginMils,
-      }).timeout(const Duration(seconds: 60));
+        'pageWidthPx': pageWidthPx,
+        'pageHeightPx': pageHeightPx,
+        'marginPx': marginPx,
+      }).timeout(const Duration(seconds: 90));
 
       final path = result ?? outPath;
       final file = File(path);
@@ -75,4 +76,3 @@ class HtmlPdfPrinter {
     }
   }
 }
-

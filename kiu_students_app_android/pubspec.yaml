@@ -96,10 +96,9 @@ flutter:
   assets:
     - assets/images/
 
-  # Local fonts for the Assignment Writer. Bundled so the editor and the
-  # exported PDF render identically and fully offline. The PDF is produced by
-  # rendering the on-screen page to images, so these fonts (Nastaliq included)
-  # appear in the PDF exactly as typed — dart-pdf cannot shape them on its own.
+  # Local fonts for the Assignment Writer. Bundled AND embedded as base64
+  # @font-face in the editor/PDF HTML, so the WebView shapes Urdu/Pashto/Arabic
+  # Nastaliq identically on screen and in the exported PDF, fully offline.
   fonts:
     - family: Noto Nastaliq Urdu   # Urdu (Nastaliq) — Google Fonts, full Urdu coverage
       fonts:

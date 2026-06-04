@@ -1,10 +1,9 @@
 /// A selectable writing font for the assignment editor.
 ///
-/// Each font is bundled locally (see `pubspec.yaml` > flutter > fonts) so the
-/// editor and the exported PDF render identically and fully offline. Because the
-/// PDF is produced by rendering the on-screen page to images (Flutter shapes the
-/// text with HarfBuzz), whichever font is chosen here is exactly what appears in
-/// the PDF — including Nastaliq, which the pure-Dart `pdf` package cannot shape.
+/// Each font is bundled locally (see `pubspec.yaml` > flutter > fonts) and
+/// embedded as base64 `@font-face` in the editor and PDF HTML, so the WebView
+/// shapes the text identically on screen and in the exported PDF, fully offline
+/// — including Nastaliq, which the pure-Dart `pdf` package cannot shape.
 class AssignmentFont {
   /// The family name exactly as registered in `pubspec.yaml`.
   final String family;

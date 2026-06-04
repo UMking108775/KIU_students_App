@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../config/app_theme.dart';
+import '../../widgets/common/text_prompt_dialog.dart';
 import '../../services/pdf_creator_service.dart';
 import 'pdf_result_screen.dart';
 import 'pdf_organizer_screen.dart';
@@ -77,31 +78,13 @@ class _MyPdfsScreenState extends State<MyPdfsScreen> {
   }
 
   Future<void> _rename(File file) async {
-    final controller =
-        TextEditingController(text: PdfCreatorService.displayName(file));
     final newName = await showDialog<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Rename PDF'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: const InputDecoration(
-            labelText: 'File name',
-            suffixText: '.pdf',
-          ),
-          onSubmitted: (v) => Navigator.pop(dialogContext, v),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext, controller.text),
-            child: const Text('Save'),
-          ),
-        ],
+      builder: (_) => TextPromptDialog(
+        title: 'Rename PDF',
+        label: 'File name',
+        initialText: PdfCreatorService.displayName(file),
+        suffixText: '.pdf',
       ),
     );
 

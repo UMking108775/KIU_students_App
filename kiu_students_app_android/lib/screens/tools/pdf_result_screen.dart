@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:printing/printing.dart';
 import '../../config/app_routes.dart';
 import '../../config/app_theme.dart';
 import '../../services/pdf_creator_service.dart';
@@ -34,7 +35,22 @@ class PdfResultScreen extends StatefulWidget {
 
 class _PdfResultScreenState extends State<PdfResultScreen> {
   final PdfCreatorService _pdfService = PdfCreatorService();
+  // Read once so PdfPreview doesn't re-rasterise on every rebuild.
+  late final Future<Uint8List> _pdfBytes = widget.file.readAsBytes();
   bool _busy = false;
+
+  /// Opens the system print sheet (print, save-as-PDF, or send to a printer app).
+  Future<void> _print() async {
+    try {
+      final bytes = await _pdfBytes;
+      await Printing.layoutPdf(
+        onLayout: (_) => bytes,
+        name: PdfCreatorService.displayName(widget.file),
+      );
+    } catch (e) {
+      _snack('Could not open print. ($e)');
+    }
+  }
 
   Future<void> _share() async {
     setState(() => _busy = true);
@@ -100,6 +116,13 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Print',
+            onPressed: _busy ? null : _print,
+            icon: const Icon(Icons.print_outlined),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -121,23 +144,29 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
               ],
             ),
           ),
-          // Preview
+          // Preview — pages rendered on a soft gray desk with spacing, fit to
+          // width. PdfPreview is pure Flutter, so the gray shows consistently
+          // from the first export (the native PDFView left it white the first
+          // time) and the pages fill the width.
           Expanded(
             child: Container(
               margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                color: colors.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colors.border),
               ),
-              clipBehavior: Clip.antiAlias,
-              child: PDFView(
-                filePath: widget.file.path,
-                enableSwipe: true,
-                swipeHorizontal: false,
-                autoSpacing: true,
-                pageFling: true,
-                fitPolicy: FitPolicy.WIDTH,
+              child: PdfPreview(
+                build: (format) => _pdfBytes,
+                useActions: false,
+                canChangePageFormat: false,
+                canChangeOrientation: false,
+                canDebug: false,
+                scrollViewDecoration:
+                    const BoxDecoration(color: Color(0xFFBCC2CA)),
+                previewPageMargin: const EdgeInsets.fromLTRB(8, 10, 8, 4),
+                padding: EdgeInsets.zero,
+                loadingWidget: const Center(child: CircularProgressIndicator()),
               ),
             ),
           ),

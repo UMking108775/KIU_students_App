@@ -24,8 +24,10 @@ public class PdfPrint {
     }
 
     private static final String TAG = "KiuPdf";
-    /** Safety timeout (ms) for the print adapter callbacks. */
-    private static final long TIMEOUT_MS = 30_000;
+    /** Safety timeout (ms) for the print adapter callbacks. Kept short so the
+     *  Dart-side caller can still fall back to the raster renderer within its
+     *  own overall timeout if the print framework hangs (some budget devices). */
+    private static final long TIMEOUT_MS = 18_000;
 
     private final PrintAttributes printAttributes;
 

@@ -91,7 +91,13 @@ class PdfCompressService {
       );
     }
 
-    final bytes = await doc.save();
-    return _creator.saveBytesToLibrary(bytes, fileName);
+    final List<int> bytes = await doc.save();
+    // Never hand back a file BIGGER than the original. Re-rasterising a text /
+    // vector PDF can produce a larger file (text compresses better as text than
+    // as a page image), so keep whichever is smaller — "compress" must never
+    // inflate the document.
+    final List<int> out =
+        bytes.length < sourceBytes.length ? bytes : sourceBytes;
+    return _creator.saveBytesToLibrary(out, fileName);
   }
 }

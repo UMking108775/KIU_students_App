@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,7 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../config/app_theme.dart';
+import '../../widgets/common/text_prompt_dialog.dart';
 import '../../services/assignment_draft_service.dart';
+import '../../services/assignment_geometry.dart';
 import '../../services/assignment_html_service.dart';
 import 'pdf_result_screen.dart';
 
@@ -15,8 +18,9 @@ enum _ExitChoice { save, discard, cancel }
 
 /// A lightweight, page-styled rich-text editor built on a WebView
 /// (contenteditable). Because the editor and the PDF use the SAME browser
-/// engine, what the student sees is exactly what the PDF contains — correct
-/// Urdu/Pashto shaping, RTL, and pagination, with no translation bugs.
+/// engine AND the SAME [AssignmentGeometry] + page fragments, what the student
+/// sees is exactly what the PDF contains — correct Urdu/Pashto shaping, RTL,
+/// equal margins, and matching page breaks.
 class WebAssignmentEditorScreen extends StatefulWidget {
   final AssignmentDraft? draft;
 
@@ -27,7 +31,8 @@ class WebAssignmentEditorScreen extends StatefulWidget {
       _WebAssignmentEditorScreenState();
 }
 
-class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
+class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen>
+    with WidgetsBindingObserver {
   final AssignmentDraftService _draftService = AssignmentDraftService();
   final AssignmentHtmlService _htmlService = AssignmentHtmlService();
 
@@ -35,31 +40,71 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
   late String _id;
   late String _title;
   late DateTime _createdAt;
+  double _marginPx = AssignmentMargin.narrowPx;
+  late AssignmentGeometry _geom;
+
+  final Set<String> _loadedFonts = {};
+  Timer? _autosave;
 
   bool _dirty = false;
   bool _ready = false;
   bool _exporting = false;
+  bool _booted = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     final draft = widget.draft;
     if (draft != null) {
       _id = draft.id;
       _title = draft.title;
       _createdAt = draft.createdAt;
+      _marginPx = draft.marginPx;
     } else {
       _id = _draftService.newId();
       _title = 'Assignment ${DateFormat('yyyy-MM-dd').format(DateTime.now())}';
       _createdAt = DateTime.now();
     }
-    _bootstrap();
+    // MediaQuery isn't available in initState; bootstrap after the first frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _bootstrap();
+    });
+  }
+
+  @override
+  void dispose() {
+    _autosave?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Persist unsaved work when the app is backgrounded so it survives a kill.
+    if ((state == AppLifecycleState.paused ||
+            state == AppLifecycleState.inactive) &&
+        _dirty &&
+        _ready) {
+      _persist();
+    }
   }
 
   Future<void> _bootstrap() async {
+    if (_booted) return;
+    _booted = true;
     try {
+      final width = MediaQuery.of(context).size.width;
+      _geom = AssignmentGeometry.forScreen(width, marginPx: _marginPx);
+
+      final openingHtml = widget.draft?.openingHtml ?? '';
+      final embed = _familiesIn(openingHtml);
+      _loadedFonts.addAll(embed);
+
       final html = await _htmlService.buildEditorHtml(
-        initialBody: widget.draft?.html ?? '',
+        geom: _geom,
+        initialBody: openingHtml,
+        embedFamilies: embed,
       );
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/editor_$_id.html');
@@ -69,20 +114,20 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
         ..setBackgroundColor(const Color(0xFFE5E7EB))
         ..addJavaScriptChannel('Editor', onMessageReceived: (_) {
-          if (!_dirty && mounted) setState(() => _dirty = true);
+          if (mounted && !_dirty) setState(() => _dirty = true);
+          _scheduleAutosave();
+        })
+        ..addJavaScriptChannel('Fonts', onMessageReceived: (msg) {
+          _ensureFont(msg.message);
         })
         ..addJavaScriptChannel('ClipboardBridge', onMessageReceived: (msg) {
-          // The WebView's own JS clipboard access is unreliable on Android, so
-          // BOTH the paste event and the toolbar's Paste button delegate here.
-          // We read the system clipboard natively (reliable) and inject the
-          // result once — rich HTML if the source had any, else the plain text
-          // (Markdown from an AI app) converted to formatted HTML.
           _handleClipboardRequest(msg.message);
         })
         ..setNavigationDelegate(
           NavigationDelegate(
             onPageFinished: (_) {
               if (mounted) setState(() => _ready = true);
+              _preloadFonts();
             },
           ),
         )
@@ -98,40 +143,67 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
     }
   }
 
-  /// Handles a paste request from the WebView (the paste event or the toolbar's
-  /// Paste button). Reads the system clipboard natively — the reliable source on
-  /// Android — and injects the content once. Prefers the clipboard's rich HTML;
-  /// falls back to the plain text the WebView's paste event managed to capture.
-  ///
-  /// [raw] is a JSON object `{html, text}` carrying whatever the WebView could
-  /// read from its own (often-empty) clipboardData, used only as a fallback.
+  /// Bundled families referenced in [html] (so we embed only what's needed).
+  Set<String> _familiesIn(String html) {
+    final out = <String>{};
+    for (final f in AssignmentHtmlService.fontFamilies) {
+      if (html.contains(f)) out.add(f);
+    }
+    return out;
+  }
+
+  /// Injects a font's `@font-face` on demand the first time it's used (keeps the
+  /// initial editor load light — Noto Nastaliq alone is ~1.2 MB).
+  Future<void> _ensureFont(String family) async {
+    if (_loadedFonts.contains(family)) return;
+    _loadedFonts.add(family);
+    try {
+      final b64 = await _htmlService.fontBase64(family);
+      if (b64 == null) return;
+      await _controller
+          ?.runJavaScript('injectFont(${jsonEncode(family)}, ${jsonEncode(b64)});');
+    } catch (_) {
+      _loadedFonts.remove(family); // allow a retry
+    }
+  }
+
+  /// Injects every bundled font's `@font-face` once the editor is up. Declaring
+  /// the faces doesn't reflow anything (the text still uses its current font),
+  /// but it means picking a different font later applies INSTANTLY with no
+  /// load-time reflow — which is what used to make content "jump" on a font
+  /// change.
+  Future<void> _preloadFonts() async {
+    for (final family in AssignmentHtmlService.fontFamilies) {
+      await _ensureFont(family);
+    }
+  }
+
+  void _scheduleAutosave() {
+    _autosave?.cancel();
+    _autosave = Timer(const Duration(milliseconds: 2500), () {
+      if (mounted && _dirty) _persist();
+    });
+  }
+
   Future<void> _handleClipboardRequest(String raw) async {
     final c = _controller;
     if (c == null) return;
-
-    String? evHtml;
-    String? evText;
+    String? evHtml, evText;
     try {
       final decoded = jsonDecode(raw);
       if (decoded is Map) {
         evHtml = decoded['html'] as String?;
         evText = decoded['text'] as String?;
       }
-    } catch (_) {
-      // Not JSON (older bridge message) — ignore; the native read covers it.
-    }
+    } catch (_) {}
 
-    String? html;
-    String? text;
+    String? html, text;
     try {
       final clip = await _htmlService.printer.readClipboard();
       html = clip?.html;
       text = clip?.text;
-    } catch (_) {
-      // Native read failed — fall back to the WebView-captured data below.
-    }
+    } catch (_) {}
 
-    // Prefer the native clipboard; fall back to what the paste event captured.
     if (html == null || html.trim().isEmpty) html = evHtml;
     if (text == null || text.trim().isEmpty) text = evText;
 
@@ -139,43 +211,47 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
     final hasText = text != null && text.trim().isNotEmpty;
     if (!hasHtml && !hasText) return;
 
-    // jsonEncode produces a safe JS string literal (handles quotes, newlines and
-    // Unicode), so Urdu/Pashto content survives the injection intact.
-    final jsHtml = jsonEncode(html ?? '');
-    final jsText = jsonEncode(text ?? '');
     try {
-      await c.runJavaScript('pasteFromDart($jsHtml, $jsText);');
-    } catch (_) {
-      // Best-effort.
-    }
+      await c.runJavaScript(
+          'pasteFromDart(${jsonEncode(html ?? '')}, ${jsonEncode(text ?? '')});');
+    } catch (_) {}
   }
 
-  /// Reads the current editor body HTML out of the WebView.
-  Future<String> _readBody() async {
+  /// Reads a JS string result, unwrapping the JSON-quoting Android adds.
+  Future<String> _jsString(String expr) async {
     final c = _controller;
     if (c == null) return '';
-    final res = await c.runJavaScriptReturningResult('getBody()');
-    var html = res.toString();
-    // Android returns the JS string JSON-encoded (quoted/escaped).
-    if (html.startsWith('"') && html.endsWith('"')) {
+    final res = await c.runJavaScriptReturningResult(expr);
+    var s = res.toString();
+    if (s.startsWith('"') && s.endsWith('"')) {
       try {
-        html = jsonDecode(html) as String;
+        s = jsonDecode(s) as String;
       } catch (_) {}
     }
-    return html;
+    return s;
   }
 
+  Future<String> _readBody() => _jsString('getBody()');
+
   Future<void> _persist() async {
-    final body = await _readBody();
-    final draft = AssignmentDraft(
-      id: _id,
-      title: _title,
-      html: body,
-      createdAt: _createdAt,
-      updatedAt: DateTime.now(),
-    );
-    await _draftService.save(draft);
-    if (mounted) setState(() => _dirty = false);
+    if (!_ready) return;
+    // Defensive: a transient WebView read/save failure must never crash the app
+    // (autosave runs on a timer). On failure we keep `_dirty` and retry later.
+    try {
+      final body = await _readBody();
+      final draft = AssignmentDraft(
+        id: _id,
+        title: _title,
+        html: body,
+        marginPx: _marginPx,
+        createdAt: _createdAt,
+        updatedAt: DateTime.now(),
+      );
+      await _draftService.save(draft);
+      if (mounted) setState(() => _dirty = false);
+    } catch (_) {
+      // keep dirty; next autosave/save will retry
+    }
   }
 
   Future<void> _saveButton() async {
@@ -192,28 +268,13 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
   }
 
   Future<void> _rename() async {
-    final controller = TextEditingController(text: _title);
     final name = await showDialog<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Document name'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(labelText: 'Title'),
-          onSubmitted: (v) => Navigator.pop(dialogContext, v),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext, controller.text),
-            child: const Text('Save'),
-          ),
-        ],
+      builder: (_) => TextPromptDialog(
+        title: 'Document name',
+        label: 'Title',
+        initialText: _title,
+        textCapitalization: TextCapitalization.words,
       ),
     );
     if (name != null && name.trim().isNotEmpty) {
@@ -221,52 +282,64 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
         _title = name.trim();
         _dirty = true;
       });
+      _scheduleAutosave();
     }
   }
 
-  Future<bool?> _askBorder() {
-    var border = false;
-    return showDialog<bool>(
+  Future<void> _pageSetup() async {
+    final chosen = await showDialog<AssignmentMargin>(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setLocal) => AlertDialog(
-          title: const Text('Export to PDF'),
-          content: SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            value: border,
-            onChanged: (v) => setLocal(() => border = v),
-            title: const Text('Page border'),
-            subtitle: const Text('A frame around the content on every page.'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(dialogContext, border),
-              child: const Text('Export'),
-            ),
+      builder: (dialogContext) {
+        final current = AssignmentMargin.fromPx(_marginPx);
+        return SimpleDialog(
+          title: const Text('Page margins'),
+          children: [
+            for (final m in AssignmentMargin.values)
+              ListTile(
+                title: Text(m.label),
+                subtitle: Text('${m.px.round()} px margin'),
+                trailing: current == m
+                    ? Icon(Icons.check, color: AppColors.of(context).primary)
+                    : null,
+                onTap: () => Navigator.pop(dialogContext, m),
+              ),
           ],
-        ),
-      ),
+        );
+      },
     );
+    if (chosen == null || !mounted) return;
+    setState(() {
+      _marginPx = chosen.px;
+      _geom = _geom.copyWith(marginPx: chosen.px);
+      _dirty = true;
+    });
+    try {
+      await _controller
+          ?.runJavaScript('setGeo(${jsonEncode(_geom.toJsConfig())});');
+    } catch (_) {}
+    _scheduleAutosave();
+  }
+
+  /// Inserts the fixed KIU cover block at the very top of the document — no form;
+  /// the student fills the blank fields in the editor.
+  Future<void> _insertCover() async {
+    try {
+      await _controller?.runJavaScript('insertCover();');
+    } catch (_) {}
+    setState(() => _dirty = true);
+    _scheduleAutosave();
   }
 
   Future<void> _exportPdf() async {
-    final width = MediaQuery.of(context).size.width;
-    final border = await _askBorder();
-    if (border == null || !mounted) return;
     await _persist();
     if (!mounted) return;
     setState(() => _exporting = true);
     try {
       final body = await _readBody();
-      final file = await _htmlService.exportPdfFromBody(
+      final file = await _htmlService.exportPdf(
         bodyHtml: body,
+        geom: _geom,
         fileName: _title,
-        border: border,
-        contentWidthPx: width,
       );
       if (!mounted) return;
       setState(() => _exporting = false);
@@ -360,13 +433,54 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen> {
               onPressed: (_ready && !_exporting) ? _exportPdf : null,
               icon: const Icon(Icons.picture_as_pdf_outlined),
             ),
+            PopupMenuButton<String>(
+              enabled: _ready,
+              onSelected: (v) {
+                switch (v) {
+                  case 'cover':
+                    _insertCover();
+                    break;
+                  case 'page':
+                    _pageSetup();
+                    break;
+                  case 'rename':
+                    _rename();
+                    break;
+                }
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: 'cover',
+                  child: ListTile(
+                    leading: Icon(Icons.article_outlined),
+                    title: Text('Insert cover page'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'page',
+                  child: ListTile(
+                    leading: Icon(Icons.settings_outlined),
+                    title: Text('Page setup'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'rename',
+                  child: ListTile(
+                    leading: Icon(Icons.drive_file_rename_outline),
+                    title: Text('Rename'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         body: Stack(
           children: [
             if (_controller != null) WebViewWidget(controller: _controller!),
-            if (!_ready)
-              const Center(child: CircularProgressIndicator()),
+            if (!_ready) const Center(child: CircularProgressIndicator()),
             if (_exporting)
               Positioned.fill(
                 child: ColoredBox(

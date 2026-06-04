@@ -28,37 +28,79 @@ class PdfOrganizerService {
     return thumbs;
   }
 
-  /// Builds a new PDF containing only [orderedZeroBasedIndices] (in that exact
-  /// order) copied from [sourceBytes], then saves it to the KIU PDFs library.
-  /// Returns the saved file.
+  /// Builds a new PDF from [orderedZeroBasedIndices] (in that exact order, so a
+  /// repeated index DUPLICATES that page) copied from [sourceBytes], applying an
+  /// optional per-output-page clockwise rotation ([rotationsQuarterTurns], 0..3,
+  /// parallel to the indices), then saves it to the KIU PDFs library.
   Future<File> buildReorganizedPdf({
     required Uint8List sourceBytes,
     required List<int> orderedZeroBasedIndices,
     required String fileName,
+    List<int>? rotationsQuarterTurns,
   }) async {
+    // Pass 1 — reorder / delete / duplicate by stamping page templates into a
+    // fresh document (lossless: text & quality preserved).
     final sf.PdfDocument source = sf.PdfDocument(inputBytes: sourceBytes);
     final sf.PdfDocument output = sf.PdfDocument();
     output.pageSettings.margins.all = 0;
-
+    List<int> bytes;
     try {
       for (final index in orderedZeroBasedIndices) {
         if (index < 0 || index >= source.pages.count) continue;
         final srcPage = source.pages[index];
         final size = srcPage.size;
         final template = srcPage.createTemplate();
-
-        // Match the output page to the source page size, then stamp the
-        // original page content onto it (lossless copy).
         output.pageSettings.size = size;
-        final newPage = output.pages.add();
-        newPage.graphics.drawPdfTemplate(template, Offset.zero, size);
+        output.pages.add().graphics.drawPdfTemplate(template, Offset.zero, size);
       }
-
-      final List<int> bytes = await output.save();
-      return _creator.saveBytesToLibrary(bytes, fileName);
+      bytes = await output.save();
     } finally {
       source.dispose();
       output.dispose();
     }
+
+    // Pass 2 — apply rotations. syncfusion's `PdfPage.rotation` setter only
+    // takes effect on a LOADED page, so we reload the just-built document and
+    // set the /Rotate flag there (viewers display the page turned; the content
+    // stays untouched, so it remains lossless and selectable).
+    final hasRotation = rotationsQuarterTurns != null &&
+        rotationsQuarterTurns.any((t) => t % 4 != 0);
+    if (hasRotation) {
+      final sf.PdfDocument doc = sf.PdfDocument(
+        inputBytes: Uint8List.fromList(bytes),
+      );
+      try {
+        final count = doc.pages.count;
+        for (var k = 0; k < count && k < rotationsQuarterTurns.length; k++) {
+          final turns = rotationsQuarterTurns[k] % 4;
+          if (turns == 1) {
+            doc.pages[k].rotation = sf.PdfPageRotateAngle.rotateAngle90;
+          } else if (turns == 2) {
+            doc.pages[k].rotation = sf.PdfPageRotateAngle.rotateAngle180;
+          } else if (turns == 3) {
+            doc.pages[k].rotation = sf.PdfPageRotateAngle.rotateAngle270;
+          }
+        }
+        bytes = await doc.save();
+      } finally {
+        doc.dispose();
+      }
+    }
+
+    return _creator.saveBytesToLibrary(bytes, fileName);
+  }
+
+  /// Renders ONE page of [bytes] (0-based [zeroBasedIndex]) to a crisp PNG for a
+  /// full-size preview. Higher dpi than the list thumbnails.
+  Future<Uint8List?> renderPage(
+    Uint8List bytes,
+    int zeroBasedIndex, {
+    double dpi = 150,
+  }) async {
+    await for (final PdfRaster page
+        in Printing.raster(bytes, pages: [zeroBasedIndex], dpi: dpi)) {
+      return page.toPng();
+    }
+    return null;
   }
 }

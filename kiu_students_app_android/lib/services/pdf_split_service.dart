@@ -57,4 +57,43 @@ class PdfSplitService {
       source.dispose();
     }
   }
+
+  /// Extracts a single inclusive page range ([startOneBased]..[endOneBased]) from
+  /// [sourceBytes] into ONE new PDF saved to the KIU PDFs library. Returns the
+  /// saved file. Indices are 1-based and clamped to the document.
+  Future<File> extractRange({
+    required Uint8List sourceBytes,
+    required int startOneBased,
+    required int endOneBased,
+    required String baseName,
+  }) async {
+    final source = sf.PdfDocument(inputBytes: sourceBytes);
+    try {
+      final total = source.pages.count;
+      var start = startOneBased.clamp(1, total);
+      var end = endOneBased.clamp(1, total);
+      if (end < start) {
+        final t = start;
+        start = end;
+        end = t;
+      }
+
+      final out = sf.PdfDocument();
+      out.pageSettings.margins.all = 0;
+      for (var i = start - 1; i <= end - 1; i++) {
+        final srcPage = source.pages[i];
+        final size = srcPage.size;
+        final template = srcPage.createTemplate();
+        out.pageSettings.size = size;
+        out.pages.add().graphics.drawPdfTemplate(template, Offset.zero, size);
+      }
+
+      final bytes = await out.save();
+      out.dispose();
+      final label = start == end ? 'page $start' : 'pages $start-$end';
+      return _creator.saveBytesToLibrary(bytes, '$baseName - $label');
+    } finally {
+      source.dispose();
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../config/app_theme.dart';
+import '../../widgets/common/text_prompt_dialog.dart';
 import '../../services/pdf_creator_service.dart';
 import '../../services/pdf_compress_service.dart';
 import 'pdf_result_screen.dart';
@@ -100,31 +101,15 @@ class _PdfCompressScreenState extends State<PdfCompressScreen> {
   }
 
   Future<String?> _askFileName(String defaultName) {
-    final controller = TextEditingController(text: defaultName);
     return showDialog<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Save compressed PDF'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(
-            labelText: 'File name',
-            suffixText: '.pdf',
-          ),
-          onSubmitted: (v) => Navigator.pop(dialogContext, v),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext, controller.text),
-            child: const Text('Compress'),
-          ),
-        ],
+      builder: (_) => TextPromptDialog(
+        title: 'Save compressed PDF',
+        label: 'File name',
+        initialText: defaultName,
+        suffixText: '.pdf',
+        confirmLabel: 'Compress',
+        textCapitalization: TextCapitalization.sentences,
       ),
     );
   }
