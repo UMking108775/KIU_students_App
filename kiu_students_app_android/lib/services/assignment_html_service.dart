@@ -186,8 +186,9 @@ class AssignmentHtmlService {
   /// place guarantees headings/lists/tables look the same on screen and in PDF.
   static String _blockCss(String scope) => '''
 $scope p { margin: 0; }
-/* Headings use PADDING (not margin) for spacing so offsetHeight measures their
-   FULL height — margins would be invisible to the paginator and cause drift. */
+/* Headings space themselves with PADDING (not margin): the paginator measures
+   line-box rects plus each block's padded bottom, and padding is part of that box
+   (a margin would sit outside it and drift the page breaks). */
 $scope h1,$scope h2,$scope h3,$scope h4,$scope h5,$scope h6 { line-height: 1.4; margin: 0; padding: .3em 0 .15em; font-weight: 700; }
 $scope h1 { font-size: 1.4em; } $scope h2 { font-size: 1.2em; } $scope h3 { font-size: 1.08em; }
 $scope h4 { font-size: 1em; } $scope h5 { font-size: 0.95em; } $scope h6 { font-size: 0.9em; }
@@ -328,8 +329,8 @@ ${_blockCss('#page')}
 <body>
 <div id="toolbar">
   <div class="trow r1">
-    <button class="btn" onmousedown="event.preventDefault()" onclick="cmd('undo')" title="Undo">${_icon('undo')}</button>
-    <button class="btn" onmousedown="event.preventDefault()" onclick="cmd('redo')" title="Redo">${_icon('redo')}</button>
+    <button class="btn" onmousedown="event.preventDefault()" onclick="undo()" title="Undo">${_icon('undo')}</button>
+    <button class="btn" onmousedown="event.preventDefault()" onclick="redo()" title="Redo">${_icon('redo')}</button>
     <span class="sep"></span>
     <button class="btn" data-cmd="bold" onmousedown="event.preventDefault()" onclick="cmd('bold')"><b>B</b></button>
     <button class="btn" data-cmd="italic" onmousedown="event.preventDefault()" onclick="cmd('italic')"><i>I</i></button>
@@ -346,7 +347,7 @@ ${_blockCss('#page')}
       </div>
     </div>
     <div class="dd">
-      <button id="sizeBtn" class="btn txt" onmousedown="event.preventDefault()" onclick="toggle('mSize', this)" title="Font size">16 ▾</button>
+      <button id="sizeBtn" class="btn txt" onmousedown="event.preventDefault()" onclick="toggle('mSize', this)" title="Font size">12 ▾</button>
       <div id="mSize" class="menu grid3"></div>
     </div>
     <span class="sep"></span>
@@ -479,7 +480,11 @@ ${_mdConverterJs()}
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=${g.contentWidthPx.round()}, initial-scale=1">
+<!-- Viewport = FULL sheet width so the centred body (margin:0 auto) leaves an
+     equal left/right margin. The raster fallback paints that whitespace as the
+     page's side margins; the vector print path ignores this meta (it lays out
+     from @page), so this only shapes the raster fallback. -->
+<meta name="viewport" content="width=${g.pageWidthPx.round()}, initial-scale=1">
 <style>
 $fontsCss
 /* Page SIZE comes from the native print attributes (pageW × sheetH); the equal
@@ -495,6 +500,9 @@ ${_blockCss('body')}
 body * { orphans: 1; widows: 1; }
 p, blockquote { break-inside: auto; page-break-inside: auto; }
 li, tr, img { break-inside: avoid; page-break-inside: avoid; }
+/* ...but a list item that contains a NESTED list may split between its sub-items,
+   so a long nested list fills pages instead of jumping whole to the next one. */
+li:has(ul), li:has(ol) { break-inside: auto; page-break-inside: auto; }
 table { break-inside: auto; page-break-inside: auto; }
 thead { display: table-header-group; }
 h1, h2, h3, h4, h5, h6 { break-after: avoid; page-break-after: avoid; }
@@ -550,6 +558,49 @@ h1, h2, h3, h4, h5, h6 { break-after: avoid; page-break-after: avoid; }
   function snapshot(){ var s = window.getSelection(); if (s.rangeCount && page.contains(s.anchorNode)) { saved = s.getRangeAt(0).cloneRange(); } }
   function restore(){ if (!saved) return; var s = window.getSelection(); s.removeAllRanges(); s.addRange(saved); }
   function notify(){ try { Editor.postMessage('changed'); } catch(e){} }
+
+  // ---- Undo / redo history -------------------------------------------------
+  // contenteditable's native undo only covers execCommand + typing; our custom
+  // DOM edits (tables, font-size spans, RTL/LTR, indent, paste) bypass it, so
+  // Ctrl+Z used to do nothing for those. This unified stack snapshots the whole
+  // editable body on every change — a MutationObserver (wired at boot) catches
+  // typing, execCommand AND manual DOM mutations — so one undo reverts whatever
+  // the last action was. Caret is saved as a character offset so it survives the
+  // innerHTML swap.
+  var undoStack=[], redoStack=[], baseline=null, histTimer=null, applyingHist=false;
+  var HIST_MAX=120;
+  function caretOffset(){
+    var sel=window.getSelection(); if(!sel.rangeCount) return null;
+    var r=sel.getRangeAt(0);
+    if(!page.contains(r.startContainer)||!page.contains(r.endContainer)) return null;
+    function len(node, off){ var rr=document.createRange(); rr.selectNodeContents(page);
+      try{ rr.setEnd(node, off); }catch(e){ return null; } return rr.toString().length; }
+    var s=len(r.startContainer, r.startOffset), e=len(r.endContainer, r.endOffset);
+    if(s===null||e===null) return null; return {s:s,e:e};
+  }
+  function restoreCaret(pos){
+    if(!pos) return;
+    function locate(target){ var w=document.createTreeWalker(page, NodeFilter.SHOW_TEXT, null, false), n, acc=0;
+      while(n=w.nextNode()){ var L=n.nodeValue.length; if(acc+L>=target) return {node:n, off:target-acc}; acc+=L; } return null; }
+    try{ var a=locate(pos.s), b=locate(pos.e); var r=document.createRange();
+      if(a){ r.setStart(a.node, Math.min(a.off, a.node.nodeValue.length)); } else { r.selectNodeContents(page); r.collapse(false); }
+      if(b){ r.setEnd(b.node, Math.min(b.off, b.node.nodeValue.length)); } else { r.collapse(false); }
+      var sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); saved=r.cloneRange();
+    }catch(e){}
+  }
+  function histSnap(){ return {html: page.innerHTML, caret: caretOffset()}; }
+  function commitHist(){
+    if(baseline && page.innerHTML===baseline.html) return;   // nothing actually changed
+    if(baseline){ undoStack.push(baseline); if(undoStack.length>HIST_MAX) undoStack.shift(); }
+    baseline=histSnap(); redoStack.length=0;
+  }
+  function flushHist(){ if(histTimer){ clearTimeout(histTimer); histTimer=null; commitHist(); } }
+  // MutationObserver callback: debounce-commit so a burst of edits = one entry.
+  function scheduleHist(){ if(applyingHist) return; if(histTimer) clearTimeout(histTimer); histTimer=setTimeout(function(){ histTimer=null; commitHist(); }, 350); }
+  function applyHist(s){ applyingHist=true; page.innerHTML=s.html; page.focus(); restoreCaret(s.caret);
+    setTimeout(function(){ applyingHist=false; }, 0); update(); notify(); repaginate(); }
+  function undo(){ flushHist(); if(!undoStack.length) return; redoStack.push(histSnap()); applyHist(undoStack.pop()); baseline=histSnap(); }
+  function redo(){ flushHist(); if(!redoStack.length) return; undoStack.push(baseline); applyHist(redoStack.pop()); baseline=histSnap(); }
 
   function placeCaretEnd(el){
     var r = document.createRange();
@@ -868,15 +919,47 @@ h1, h2, h3, h4, h5, h6 { break-after: avoid; page-break-after: avoid; }
     var bs=[], seen={};
     for(var i=0;i<rects.length;i++){ var r=rects[i]; if(r.height<=0) continue;
       var b=Math.round(r.bottom - pr.top); if(b>pad && !seen[b]){ seen[b]=1; bs.push(b); } }
+    // Also allow a break right after a block's FULL padded height. Line-box rects
+    // exclude padding, so e.g. a heading's bottom padding would otherwise be
+    // invisible and nudge the break a few px too high.
+    var kids0=page.children;
+    for(var ki=0;ki<kids0.length;ki++){ var kb=Math.round(kids0[ki].getBoundingClientRect().bottom - pr.top);
+      if(kb>pad && !seen[kb]){ seen[kb]=1; bs.push(kb); } }
     bs.sort(function(a,b){ return a-b; });
+    // Blocks the PDF refuses to split (CSS break-inside:avoid on li,tr,img). If a
+    // page break would land inside one, snap it UP to that block's top so the whole
+    // block moves to the next page — exactly what the PDF does. This keeps the
+    // editor's guide lines and the PDF's real page breaks in agreement (a break no
+    // longer cuts through a table row / list item / image on screen while the PDF
+    // pushes it whole to the next page).
+    var avoid=[];
+    var atoms=page.querySelectorAll('tr,img,li');
+    for(var a=0;a<atoms.length;a++){ var el=atoms[a];
+      // A list item that WRAPS a nested list is splittable (it breaks between its
+      // sub-items), so only LEAF list items / single table rows / images are kept
+      // whole. This lets a long table or (nested) list fill the bottom of a page
+      // and continue on the next, instead of jumping whole and leaving a big gap.
+      if(el.tagName==='LI' && el.querySelector('ul,ol')) continue;
+      var rc=el.getBoundingClientRect(); if(rc.height<=0) continue;
+      avoid.push({t:rc.top-pr.top, b:rc.bottom-pr.top}); }
+    function snapUp(by, top){
+      var best=by;
+      for(var a=0;a<avoid.length;a++){ var rg=avoid[a];
+        // break falls strictly inside this block, and the block still fits below
+        // the current page top -> push the whole block down (snap to its top).
+        if(by>rg.t+tol && by<rg.b-tol && rg.t>top+tol && rg.t<best) best=rg.t; }
+      return best;
+    }
     var breaks=[], top=pad, prev=pad;
     for(var j=0;j<bs.length;j++){
       var b=bs[j];
       // While this line overruns the current page, break at the last line that fit
-      // (or hard-break if a single line is taller than a whole page).
+      // (or hard-break if a single line is taller than a whole page), but never
+      // bisect an unbreakable block.
       while(b - top > ph + tol){
         var by=(prev > top + tol) ? prev : (top + ph);
-        breaks.push(by); top=by; if(prev<top) prev=top;
+        by=snapUp(by, top);
+        breaks.push(by); top=by; prev=top;
       }
       prev=b;
     }
@@ -1018,11 +1101,19 @@ h1, h2, h3, h4, h5, h6 { break-after: avoid; page-break-after: avoid; }
   // Catch system-menu pastes on WebViews that fire beforeinput but not a
   // cancelable paste event (otherwise raw '### ...' would slip straight in).
   page.addEventListener('beforeinput', function(e){
-    if(e.inputType==='insertFromPaste'){ try { e.preventDefault(); } catch(_){} triggerPaste('', ''); }
+    if(e.inputType==='insertFromPaste'){ try { e.preventDefault(); } catch(_){} triggerPaste('', ''); return; }
+    // Route the platform's own undo/redo (device keyboard, Ctrl+Z) to our unified
+    // history so it stays in sync with the custom DOM edits.
+    if(e.inputType==='historyUndo'){ try { e.preventDefault(); } catch(_){} undo(); }
+    else if(e.inputType==='historyRedo'){ try { e.preventDefault(); } catch(_){} redo(); }
   });
 
   // ---- Boot ----
   applyGeoVars(); buildMenus();
+  baseline=histSnap();
+  // One observer catches every kind of edit (typing, execCommand AND our manual
+  // DOM mutations) and debounce-commits it to the undo history.
+  try { new MutationObserver(scheduleHist).observe(page, {subtree:true, childList:true, characterData:true, attributes:true}); } catch(e){}
   window.addEventListener('load', function(){ setTimeout(paginate, 60); });
   setTimeout(function(){ paginate(); update(); }, 80);
 ''';
@@ -1038,7 +1129,15 @@ h1, h2, h3, h4, h5, h6 { break-after: avoid; page-break-after: avoid; }
     s = s.replace(/\*(.+?)\*/g, '<i>$1</i>');
     s = s.replace(/(^|\s)_(.+?)_(?=\s|$)/g, '$1<i>$2</i>');
     s = s.replace(/`([^`]+)`/g, '<span style="background:#f3f4f6;padding:0 3px;border-radius:3px;font-family:monospace">$1</span>');
-    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(m, txt, url){
+      url=(url||'').trim();
+      // Only safe schemes become links; a bare domain is assumed https; anything
+      // else (javascript:, data:, file:, ...) keeps the text but drops the link.
+      if(/^(https?:|mailto:)/i.test(url)){}
+      else if(/^[a-z][a-z0-9+.\-]*:/i.test(url)){ return txt; }
+      else { url='https://'+url; }
+      return '<a href="'+url+'">'+txt+'</a>';
+    });
     return s;
   }
   function mdNextContent(lines, i){ while(i<lines.length && !lines[i].trim()) i++; return i; }

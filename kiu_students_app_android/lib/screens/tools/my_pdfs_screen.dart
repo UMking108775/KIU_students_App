@@ -7,6 +7,7 @@ import '../../services/pdf_creator_service.dart';
 import 'pdf_result_screen.dart';
 import 'pdf_organizer_screen.dart';
 import 'scan_to_pdf_screen.dart';
+import 'widgets/tool_card_style.dart';
 
 /// History of PDFs the student has created with the Scan & Make PDF tool.
 class MyPdfsScreen extends StatefulWidget {
@@ -18,13 +19,21 @@ class MyPdfsScreen extends StatefulWidget {
 
 class _MyPdfsScreenState extends State<MyPdfsScreen> {
   final PdfCreatorService _pdfService = PdfCreatorService();
+  final TextEditingController _searchCtrl = TextEditingController();
   List<File> _files = [];
+  String _query = '';
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -191,43 +200,98 @@ class _MyPdfsScreenState extends State<MyPdfsScreen> {
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: _load,
-      child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
-        itemCount: _files.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
-        itemBuilder: (context, index) {
-          final file = _files[index];
-          final stat = file.statSync();
-          final subtitle =
-              '${DateFormat('d MMM yyyy, h:mm a').format(stat.modified)}'
-              '  •  ${PdfCreatorService.formatSize(stat.size)}';
+    final q = _query.trim().toLowerCase();
+    final filtered = q.isEmpty
+        ? _files
+        : _files
+            .where((f) =>
+                PdfCreatorService.displayName(f).toLowerCase().contains(q))
+            .toList();
 
-          return _PdfListTile(
-            colors: colors,
-            name: PdfCreatorService.displayName(file),
-            subtitle: subtitle,
-            onTap: () => _open(file),
-            onAction: (action) {
-              switch (action) {
-                case _PdfAction.open:
-                  _open(file);
-                case _PdfAction.organize:
-                  _organize(file);
-                case _PdfAction.share:
-                  _share(file);
-                case _PdfAction.save:
-                  _saveToDevice(file);
-                case _PdfAction.rename:
-                  _rename(file);
-                case _PdfAction.delete:
-                  _delete(file);
-              }
-            },
-          );
-        },
-      ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+          child: Container(
+            decoration: toolCardDecoration(context),
+            child: TextField(
+              controller: _searchCtrl,
+              onChanged: (v) => setState(() => _query = v),
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: 'Search PDFs',
+                prefixIcon:
+                    Icon(Icons.search_rounded, color: colors.textSecondary),
+                suffixIcon: _query.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: Icon(Icons.close_rounded,
+                            color: colors.textSecondary),
+                        tooltip: 'Clear',
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _query = '');
+                        },
+                      ),
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: filtered.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Text(
+                      'No PDFs match "${_query.trim()}".',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: colors.textSecondary),
+                    ),
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _load,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 96),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final file = filtered[index];
+                      final stat = file.statSync();
+                      final subtitle =
+                          '${DateFormat('d MMM yyyy, h:mm a').format(stat.modified)}'
+                          '  •  ${PdfCreatorService.formatSize(stat.size)}';
+
+                      return _PdfListTile(
+                        colors: colors,
+                        name: PdfCreatorService.displayName(file),
+                        subtitle: subtitle,
+                        onTap: () => _open(file),
+                        onAction: (action) {
+                          switch (action) {
+                            case _PdfAction.open:
+                              _open(file);
+                            case _PdfAction.organize:
+                              _organize(file);
+                            case _PdfAction.share:
+                              _share(file);
+                            case _PdfAction.save:
+                              _saveToDevice(file);
+                            case _PdfAction.rename:
+                              _rename(file);
+                            case _PdfAction.delete:
+                              _delete(file);
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+        ),
+      ],
     );
   }
 }
@@ -251,19 +315,17 @@ class _PdfListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: colors.surface,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
+    return Container(
+      decoration: toolCardDecoration(context),
+      child: Material(
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: colors.border),
-          ),
-          child: Row(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
             children: [
               Container(
                 width: 44,
@@ -348,6 +410,7 @@ class _PdfListTile extends StatelessWidget {
               ),
             ],
           ),
+        ),
         ),
       ),
     );

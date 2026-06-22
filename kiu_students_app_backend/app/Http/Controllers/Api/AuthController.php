@@ -43,8 +43,10 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Generate token using Sanctum
-            $token = $user->createToken('mobile-app', ['*'], now()->addDays(30))->plainTextToken;
+            // Generate token using Sanctum. The token is named with the
+            // device id so the active session can be tracked per-device.
+            $deviceId = $this->resolveDeviceId($request);
+            $token = $user->createToken($deviceId, ['*'], now()->addDays(30))->plainTextToken;
 
             DB::commit();
 
@@ -77,17 +79,34 @@ class AuthController extends Controller
                 return $this->unauthorizedResponse('Invalid KIU ID or password');
             }
 
-            // Revoke all previous tokens
+            $deviceId = $this->resolveDeviceId($request);
+            $force = filter_var($request->input('force', false), FILTER_VALIDATE_BOOLEAN);
+
+            // Single active session: is this account currently logged in on a
+            // DIFFERENT device? If so, warn before signing that device out.
+            $otherDeviceActive = $this->hasActiveTokenOnOtherDevice($user, $deviceId);
+
+            if ($otherDeviceActive && !$force) {
+                return response()->json([
+                    'success' => false,
+                    'requires_confirmation' => true,
+                    'message' => 'This account is already logged in on another device. If you continue, you will be signed in here and that device will be signed out.',
+                ], 409);
+            }
+
+            // Revoke all previous tokens (this signs out any other device).
             $user->tokens()->delete();
 
-            // Generate new token with 30 days expiry
-            $token = $user->createToken('mobile-app', ['*'], now()->addDays(30))->plainTextToken;
+            // New token named with this device's id so we can identify which
+            // device currently owns the session.
+            $token = $user->createToken($deviceId, ['*'], now()->addDays(30))->plainTextToken;
 
             return $this->successResponse([
                 'user' => new UserResource($user),
                 'token' => $token,
                 'token_type' => 'Bearer',
                 'expires_in' => '30 days',
+                'displaced_other_device' => $otherDeviceActive,
             ], 'Login successful. Welcome back!');
 
         } catch (\Exception $e) {
@@ -95,6 +114,51 @@ class AuthController extends Controller
                 config('app.debug') ? $e->getMessage() : null
             );
         }
+    }
+
+    /**
+     * Report whether an account's session is still active, and why it ended.
+     *
+     * Public (unauthenticated) on purpose: a device whose token was revoked by
+     * a login elsewhere can no longer authenticate, but still needs to know
+     * WHY it was logged out. Returns one of:
+     *   - active              : this device still owns a valid session
+     *   - logged_in_elsewhere : another device took over the session
+     *   - expired             : no active session for this account
+     *   - unknown             : account not found / insufficient data
+     */
+    public function sessionState(Request $request)
+    {
+        $kiuId = trim((string) $request->input('kiu_id', ''));
+        $deviceId = $this->resolveDeviceId($request);
+
+        if ($kiuId === '') {
+            return $this->successResponse(['active' => false, 'reason' => 'unknown']);
+        }
+
+        $user = User::where('kiu_id', $kiuId)->where('role', '!=', 'admin')->first();
+        if (!$user) {
+            return $this->successResponse(['active' => false, 'reason' => 'unknown']);
+        }
+
+        $now = now();
+        $tokens = $user->tokens()
+            ->where(function ($q) use ($now) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', $now);
+            })
+            ->get(['id', 'name']);
+
+        $hasThisDevice = $tokens->contains(fn ($t) => $t->name === $deviceId);
+        $hasOtherDevice = $tokens->contains(fn ($t) => $t->name !== $deviceId);
+
+        $reason = $hasThisDevice
+            ? 'active'
+            : ($hasOtherDevice ? 'logged_in_elsewhere' : 'expired');
+
+        return $this->successResponse([
+            'active' => $hasThisDevice,
+            'reason' => $reason,
+        ]);
     }
 
     /**
@@ -202,5 +266,32 @@ class AuthController extends Controller
                 config('app.debug') ? $e->getMessage() : null
             );
         }
+    }
+
+    /**
+     * Resolve a stable device id from the request, falling back to a legacy
+     * constant so older app builds (which don't send one) keep working.
+     */
+    private function resolveDeviceId(Request $request): string
+    {
+        $deviceId = trim((string) $request->input('device_id', ''));
+
+        return $deviceId !== '' ? substr($deviceId, 0, 100) : 'mobile-app';
+    }
+
+    /**
+     * Whether the user has a non-expired token that belongs to a different
+     * device than the one making the request.
+     */
+    private function hasActiveTokenOnOtherDevice(User $user, string $deviceId): bool
+    {
+        $now = now();
+
+        return $user->tokens()
+            ->where('name', '!=', $deviceId)
+            ->where(function ($q) use ($now) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', $now);
+            })
+            ->exists();
     }
 }

@@ -7,7 +7,14 @@ import '../../widgets/common/webview_moodle_support.dart';
 /// Embedded browser for KIU Web Portal
 class WebPortalScreen extends StatefulWidget {
   final bool isForced;
-  const WebPortalScreen({super.key, this.isForced = false});
+  final String portalUrl;
+  final String title;
+  const WebPortalScreen({
+    super.key,
+    this.isForced = false,
+    this.portalUrl = 'https://ur.kiu.org/login/index.php',
+    this.title = 'KIU Portal',
+  });
 
   @override
   State<WebPortalScreen> createState() => _WebPortalScreenState();
@@ -19,7 +26,6 @@ class _WebPortalScreenState extends State<WebPortalScreen> {
   bool _canGoBack = false;
   bool _isDesktopMode = false;
   double _loadingProgress = 0;
-  final String _portalUrl = 'https://ur.kiu.org/login/index.php';
 
   // User agents
   static const _mobileUserAgent =
@@ -90,7 +96,7 @@ class _WebPortalScreenState extends State<WebPortalScreen> {
       mounted: () => mounted,
     );
 
-    await _controller.loadRequest(Uri.parse(_portalUrl));
+    await _controller.loadRequest(Uri.parse(widget.portalUrl));
   }
 
   Future<void> _updateViewport() async {
@@ -268,10 +274,10 @@ class _WebPortalScreenState extends State<WebPortalScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'KIU Portal',
-                  style: TextStyle(fontSize: 14),
+                  widget.title,
+                  style: const TextStyle(fontSize: 14),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

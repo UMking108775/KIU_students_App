@@ -82,10 +82,10 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Persist unsaved work when the app is backgrounded so it survives a kill.
-    if ((state == AppLifecycleState.paused ||
-            state == AppLifecycleState.inactive) &&
-        _dirty &&
-        _ready) {
+    // Only on `paused` (a real background transition): `inactive` fires constantly
+    // (dialogs, the notification shade, permission prompts) and would trigger
+    // redundant full getBody()+write round-trips.
+    if (state == AppLifecycleState.paused && _dirty && _ready) {
       _persist();
     }
   }
@@ -127,7 +127,6 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen>
           NavigationDelegate(
             onPageFinished: (_) {
               if (mounted) setState(() => _ready = true);
-              _preloadFonts();
             },
           ),
         )
@@ -164,17 +163,6 @@ class _WebAssignmentEditorScreenState extends State<WebAssignmentEditorScreen>
           ?.runJavaScript('injectFont(${jsonEncode(family)}, ${jsonEncode(b64)});');
     } catch (_) {
       _loadedFonts.remove(family); // allow a retry
-    }
-  }
-
-  /// Injects every bundled font's `@font-face` once the editor is up. Declaring
-  /// the faces doesn't reflow anything (the text still uses its current font),
-  /// but it means picking a different font later applies INSTANTLY with no
-  /// load-time reflow — which is what used to make content "jump" on a font
-  /// change.
-  Future<void> _preloadFonts() async {
-    for (final family in AssignmentHtmlService.fontFamilies) {
-      await _ensureFont(family);
     }
   }
 

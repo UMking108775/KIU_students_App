@@ -2,7 +2,7 @@ name: kiu_students_app
 description: "KIU Students Material App - Access study materials and resources"
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.1.2+3
 
 environment:
   sdk: ^3.10.4

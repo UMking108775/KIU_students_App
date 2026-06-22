@@ -30,9 +30,9 @@ class AssignmentGeometry {
 
   const AssignmentGeometry({
     required this.pageWidthPx,
-    this.fontSizePx = 16,
+    this.fontSizePx = 12,
     this.lineHeight = 2.0,
-    this.linesPerPage = 12,
+    this.linesPerPage = 18,
     this.marginPx = 36,
   });
 
@@ -65,9 +65,9 @@ class AssignmentGeometry {
   /// [screenWidthPx] is the logical/CSS width (e.g. `MediaQuery.size.width`).
   factory AssignmentGeometry.forScreen(
     double screenWidthPx, {
-    double fontSizePx = 16,
+    double fontSizePx = 12,
     double lineHeight = 2.0,
-    int linesPerPage = 12,
+    int linesPerPage = 18,
     double marginPx = 36,
   }) {
     // 10px desk on each side (matches the editor's scroller padding). Clamp so

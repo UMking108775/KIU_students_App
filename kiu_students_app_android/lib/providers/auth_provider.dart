@@ -6,6 +6,19 @@ import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../services/cache_service.dart';
 
+/// Result of a login attempt.
+enum LoginOutcome {
+  /// Logged in successfully.
+  success,
+
+  /// Invalid credentials / network / server error.
+  failure,
+
+  /// The account is active on another device; the user must confirm before
+  /// that device is signed out. See [AuthProvider.deviceConfirmationMessage].
+  needsDeviceConfirmation,
+}
+
 /// Authentication state management provider
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService;
@@ -16,6 +29,8 @@ class AuthProvider extends ChangeNotifier {
   String? _errorMessage;
   bool _isGuestMode = false;
   bool _handlingSessionExpiry = false;
+  String? _deviceConfirmationMessage;
+  String? _sessionEndedMessage;
 
   AuthProvider({AuthService? authService})
     : _authService =
@@ -32,6 +47,18 @@ class AuthProvider extends ChangeNotifier {
   bool get isInitialized => _isInitialized;
   String? get errorMessage => _errorMessage;
   bool get isGuestMode => _isGuestMode;
+
+  /// Message to show when login needs confirmation (account active elsewhere).
+  String? get deviceConfirmationMessage => _deviceConfirmationMessage;
+
+  /// One-shot message explaining why the session ended (shown on the login
+  /// screen after a forced logout). Read once, then call
+  /// [consumeSessionEndedMessage].
+  String? get sessionEndedMessage => _sessionEndedMessage;
+
+  void consumeSessionEndedMessage() {
+    _sessionEndedMessage = null;
+  }
 
   /// Enter guest mode (preview without login)
   void enterGuestMode() {
@@ -62,25 +89,45 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Login user
-  Future<bool> login({required String kiuId, required String password}) async {
+  /// Login user.
+  ///
+  /// Pass [force] = true to sign in even when the account is active on another
+  /// device (that device is then signed out). Returns a [LoginOutcome] so the
+  /// UI can prompt for confirmation when needed.
+  Future<LoginOutcome> login({
+    required String kiuId,
+    required String password,
+    bool force = false,
+  }) async {
     _isLoading = true;
     _errorMessage = null;
+    if (!force) _deviceConfirmationMessage = null;
     notifyListeners();
 
-    final response = await _authService.login(kiuId: kiuId, password: password);
+    final response = await _authService.login(
+      kiuId: kiuId,
+      password: password,
+      force: force,
+    );
 
     _isLoading = false;
 
     if (response.success && response.data != null) {
       _user = response.data;
+      _deviceConfirmationMessage = null;
       notifyListeners();
-      return true;
-    } else {
-      _errorMessage = response.message;
-      notifyListeners();
-      return false;
+      return LoginOutcome.success;
     }
+
+    if (response.requiresConfirmation) {
+      _deviceConfirmationMessage = response.message;
+      notifyListeners();
+      return LoginOutcome.needsDeviceConfirmation;
+    }
+
+    _errorMessage = response.message;
+    notifyListeners();
+    return LoginOutcome.failure;
   }
 
   /// Register new user
@@ -151,6 +198,13 @@ class AuthProvider extends ChangeNotifier {
     if (_user == null && !_isGuestMode) return false; // already logged out / nothing to do
     _handlingSessionExpiry = true;
     try {
+      // Find out WHY the session ended before clearing it (needs the kiu_id).
+      final kiuId = _user?.kiuId;
+      String reason = 'expired';
+      if (kiuId != null) {
+        reason = await _authService.getSessionEndReason(kiuId: kiuId);
+      }
+
       await _authService.clearSession();
       try {
         await AudioService().stop();
@@ -160,7 +214,13 @@ class AuthProvider extends ChangeNotifier {
       }
       _user = null;
       _isGuestMode = false;
-      _errorMessage = 'Your session has expired. Please log in again.';
+
+      final message = reason == 'logged_in_elsewhere'
+          ? 'This account was opened on another device, so you have been '
+                'logged out here.'
+          : 'Your session has expired. Please log in again.';
+      _sessionEndedMessage = message;
+      _errorMessage = message;
       notifyListeners();
       return true;
     } finally {

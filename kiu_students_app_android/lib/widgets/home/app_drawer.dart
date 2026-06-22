@@ -212,8 +212,21 @@ class _AppDrawerState extends State<AppDrawer> {
 
                   const _SectionDivider(title: 'University'),
                   _MenuItem(
+                    icon: Icons.public_rounded,
+                    label: 'KIU Portal (New)',
+                    subtitle: 'kiutools.kiugraduates.com',
+                    onTap: () => _navigateTo(
+                      context,
+                      const WebPortalScreen(
+                        portalUrl:
+                            'https://kiutools.kiugraduates.com/student/login',
+                        title: 'KIU Portal New',
+                      ),
+                    ),
+                  ),
+                  _MenuItem(
                     icon: Icons.language,
-                    label: 'KIU Web Portal',
+                    label: 'KIU Portal (Old)',
                     subtitle: _needsLogin
                         ? 'Weekly Login Suggestion'
                         : 'Last login: $_lastLoginText',

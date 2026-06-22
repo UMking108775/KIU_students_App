@@ -141,6 +141,10 @@ class ApiService {
       );
     } else if (response.statusCode == 422) {
       return ApiResponse.fromJson(body, fromJsonT);
+    } else if (response.statusCode == 409) {
+      // Conflict: server wants the client to confirm before proceeding
+      // (carries `requires_confirmation: true`).
+      return ApiResponse.fromJson(body, fromJsonT);
     } else if (response.statusCode == 429) {
       return ApiResponse(
         success: false,

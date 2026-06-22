@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../config/app_theme.dart';
 
-/// Header widget with KIU logo and title for auth screens
+/// Header widget with KIU logo and title for auth screens.
+///
+/// Compact, with a softly rounded logo tile and a bottom-right shadow.
 class AuthHeader extends StatelessWidget {
   final String? title;
   final String? subtitle;
@@ -12,26 +14,30 @@ class AuthHeader extends StatelessWidget {
     super.key,
     this.title,
     this.subtitle,
-    this.logoHeight = 100,
+    this.logoHeight = 72,
   });
 
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       children: [
-        // Logo
+        // Logo tile
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: colors.surface,
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: colors.border),
             boxShadow: [
               BoxShadow(
-                color: colors.primary.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.4)
+                    : colors.primary.withValues(alpha: 0.15),
+                blurRadius: 14,
+                offset: const Offset(3, 6),
               ),
             ],
           ),
@@ -43,11 +49,11 @@ class AuthHeader extends StatelessWidget {
         ),
 
         if (title != null) ...[
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
           Text(
             title!,
             style: GoogleFonts.poppins(
-              fontSize: 28,
+              fontSize: 23,
               fontWeight: FontWeight.bold,
               color: colors.textPrimary,
             ),
@@ -56,11 +62,11 @@ class AuthHeader extends StatelessWidget {
         ],
 
         if (subtitle != null) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             subtitle!,
             style: GoogleFonts.poppins(
-              fontSize: 14,
+              fontSize: 13,
               color: colors.textSecondary,
             ),
             textAlign: TextAlign.center,

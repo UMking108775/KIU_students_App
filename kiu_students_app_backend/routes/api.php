@@ -22,6 +22,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('api.login');
     });
 
+    // Public: lets a device whose token was revoked (e.g. signed out by a
+    // login on another device) find out why its session ended.
+    Route::post('auth/session-state', [AuthController::class, 'sessionState'])
+        ->middleware('throttle:20,1')
+        ->name('api.session-state');
+
     // Categories (Publicly accessible for guest mode)
     Route::prefix('categories')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\CategoryController::class, 'index'])->name('api.categories.index');

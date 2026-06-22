@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/splash/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/home/home_screen.dart';
@@ -11,6 +12,7 @@ import '../screens/tools/tools_hub_screen.dart';
 /// App route definitions
 class AppRoutes {
   // Route names
+  static const String splash = '/splash';
   static const String login = '/login';
   static const String register = '/register';
   static const String dataLoading = '/data-loading';
@@ -22,10 +24,11 @@ class AppRoutes {
   static const String tools = '/tools';
 
   // Initial route
-  static const String initial = login;
+  static const String initial = splash;
 
   // Route map
   static Map<String, WidgetBuilder> get routes => {
+    splash: (context) => const SplashScreen(),
     login: (context) => const LoginScreen(),
     register: (context) => const RegisterScreen(),
     // dataLoading route removed

@@ -1,6 +1,7 @@
 import '../models/api_response.dart';
 import '../models/user_model.dart';
 import 'api_service.dart';
+import 'device_service.dart';
 import 'storage_service.dart';
 import 'cache_service.dart';
 
@@ -23,6 +24,7 @@ class AuthService {
     required String password,
     required String passwordConfirmation,
   }) async {
+    final device = DeviceService();
     final response = await _apiService.post<AuthResponseData>(
       '/auth/register',
       body: {
@@ -31,6 +33,8 @@ class AuthService {
         'whatsapp_number': whatsappNumber,
         'password': password,
         'password_confirmation': passwordConfirmation,
+        'device_id': await device.getDeviceId(),
+        'device_name': await device.getDeviceName(),
       },
       fromJsonT: (data) => AuthResponseData.fromJson(data),
     );
@@ -61,14 +65,27 @@ class AuthService {
     );
   }
 
-  /// Login user
+  /// Login user.
+  ///
+  /// Pass [force] = true to proceed even when the account is currently logged
+  /// in on another device (that device will be signed out). When [force] is
+  /// false and another device is active, the response carries
+  /// [ApiResponse.requiresConfirmation] so the UI can ask the user first.
   Future<ApiResponse<UserModel>> login({
     required String kiuId,
     required String password,
+    bool force = false,
   }) async {
+    final device = DeviceService();
     final response = await _apiService.post<AuthResponseData>(
       '/auth/login',
-      body: {'kiu_id': kiuId, 'password': password},
+      body: {
+        'kiu_id': kiuId,
+        'password': password,
+        'device_id': await device.getDeviceId(),
+        'device_name': await device.getDeviceName(),
+        'force': force,
+      },
       fromJsonT: (data) => AuthResponseData.fromJson(data),
     );
 
@@ -95,7 +112,30 @@ class AuthService {
       success: false,
       message: response.message,
       errors: response.errors,
+      requiresConfirmation: response.requiresConfirmation,
     );
+  }
+
+  /// Ask the backend why this device's session ended (called after a 401).
+  ///
+  /// Returns one of: `active`, `logged_in_elsewhere`, `expired`, `unknown`.
+  /// Unauthenticated by design — the token is already gone. Falls back to
+  /// `expired` when the endpoint is unavailable (e.g. older backend).
+  Future<String> getSessionEndReason({required String kiuId}) async {
+    try {
+      final deviceId = await DeviceService().getDeviceId();
+      final response = await _apiService.post<Map<String, dynamic>>(
+        '/auth/session-state',
+        body: {'kiu_id': kiuId, 'device_id': deviceId},
+        fromJsonT: (data) => data as Map<String, dynamic>,
+      );
+      if (response.success && response.data != null) {
+        return response.data!['reason']?.toString() ?? 'expired';
+      }
+    } catch (_) {
+      // Ignored — fall back below.
+    }
+    return 'expired';
   }
 
   /// Get current user profile

@@ -43,10 +43,14 @@ class MainActivity : AudioServiceActivity() {
                         // Page geometry in CSS px (the editor's sheet size).
                         val pageWidthPx = call.argument<Int>("pageWidthPx") ?: 360
                         val pageHeightPx = call.argument<Int>("pageHeightPx") ?: 480
+                        // Inner page margin (CSS px). The raster fallback needs it to
+                        // reinstate the page margins; the vector path gets margins
+                        // from the HTML's @page rule instead.
+                        val marginPx = call.argument<Int>("marginPx") ?: 36
                         if (htmlPath == null || outputPath == null) {
                             result.error("ARGS", "htmlPath and outputPath are required", null)
                         } else {
-                            htmlToPdf(htmlPath, outputPath, pageWidthPx, pageHeightPx, result)
+                            htmlToPdf(htmlPath, outputPath, pageWidthPx, pageHeightPx, marginPx, result)
                         }
                     }
                     "readClipboard" -> readClipboard(result)
@@ -81,6 +85,7 @@ class MainActivity : AudioServiceActivity() {
         outputPath: String,
         pageWidthPx: Int,
         pageHeightPx: Int,
+        marginPx: Int,
         result: MethodChannel.Result,
     ) {
         Log.d(tag, "htmlToPdf: wPx=$pageWidthPx hPx=$pageHeightPx html=$htmlPath")
@@ -135,7 +140,7 @@ class MainActivity : AudioServiceActivity() {
                                     } else {
                                         // Vector path failed — fall back to raster.
                                         Log.w(tag, "vector failed -> raster fallback")
-                                        val rok = renderRaster(view, outputPath, pageWidthPx, pageHeightPx, density)
+                                        val rok = renderRaster(view, outputPath, pageWidthPx, pageHeightPx, marginPx, density)
                                         detachWebView()
                                         safeResult {
                                             if (rok) result.success(outputPath)
@@ -210,45 +215,68 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
-    /// Raster fallback: lays the WebView out at its full height and slices it into
-    /// page-sized bitmaps. The slice height equals one CSS page, so breaks land at
-    /// page boundaries (the `.page` boxes are stacked at multiples of the page
-    /// height) instead of cutting through a line of text.
+    /// Raster fallback (used only when the vector print framework hangs/fails on a
+    /// budget device). Lays the WebView out at its full height and slices the
+    /// CONTENT into page-sized bitmaps that mirror the continuous model's geometry:
+    ///
+    ///  - each PDF page is the full sheet (pageWidthPx × pageHeightPx),
+    ///  - the writable area is inset by `marginPx` on all four sides, so every page
+    ///    gets the same margins the editor and the vector PDF have, and
+    ///  - the content is sliced every `contentHeightPx` (= pageHeightPx − 2·margin),
+    ///    NOT every sheet height — so a slice never eats the margins or cuts off a
+    ///    line that the next page should start with.
+    ///
+    /// The left/right margins come for free: the export body is `contentWidthPx`
+    /// wide and centred (`margin:0 auto`) inside a `pageWidthPx`-wide viewport, so
+    /// the side whitespace is part of what we draw. The top/bottom margins are the
+    /// white bands left above and below the clipped writable area.
     private fun renderRaster(
         view: WebView,
         outputPath: String,
         pageWidthPx: Int,
         pageHeightPx: Int,
+        marginPx: Int,
         density: Float,
     ): Boolean {
         return try {
-            val viewWidthPx = (pageWidthPx * density).roundToInt().coerceAtLeast(1)
-            val totalCss = view.contentHeight // CSS px
+            val viewWidthDev = (pageWidthPx * density).roundToInt().coerceAtLeast(1)
+            val totalCss = view.contentHeight // CSS px of the laid-out content
             if (totalCss <= 0) return false
-            val totalDevPx = (totalCss * density).roundToInt()
-            view.layout(0, 0, viewWidthPx, totalDevPx)
+            val totalDev = (totalCss * density).roundToInt().coerceAtLeast(1)
+            view.layout(0, 0, viewWidthDev, totalDev)
 
-            val pageWidthPt = (pageWidthPx * 72.0 / 96.0)
-            val pageHeightPt = (pageHeightPx * 72.0 / 96.0)
-            val sliceDevPx = pageHeightPx * density           // one page in device px
-            val pages = ceil(totalCss.toDouble() / pageHeightPx).toInt().coerceAtLeast(1)
-            // Uniform scale: maps the device-px view onto the point-sized page.
-            val scale = (pageWidthPt / viewWidthPx).toFloat()
+            // CSS px -> PostScript points (72 pt/in, 96 CSS px/in).
+            val pxToPt = 72.0 / 96.0
+            val pageWPt = pageWidthPx * pxToPt
+            val pageHPt = pageHeightPx * pxToPt
+            val marginPt = marginPx * pxToPt
+            val contentHeightPx = (pageHeightPx - 2 * marginPx).coerceAtLeast(1)
+            val contentHPt = contentHeightPx * pxToPt
 
+            // device px -> points: maps the full-width device-px view onto the page.
+            val scale = (pageWPt / viewWidthDev).toFloat()
+            val sliceDev = contentHeightPx * density // one content slice, in device px
+
+            val pages = ceil(totalCss.toDouble() / contentHeightPx).toInt().coerceAtLeast(1)
             val document = PdfDocument()
             for (k in 0 until pages) {
                 val pageInfo = PdfDocument.PageInfo.Builder(
-                    pageWidthPt.roundToInt(), pageHeightPt.roundToInt(), k + 1
+                    pageWPt.roundToInt(), pageHPt.roundToInt(), k + 1
                 ).create()
                 val pdfPage = document.startPage(pageInfo)
                 val canvas: Canvas = pdfPage.canvas
-                val srcTop = (k * sliceDevPx)
+
                 canvas.save()
-                canvas.clipRect(RectF(0f, 0f, pageWidthPt.toFloat(), pageHeightPt.toFloat()))
-                canvas.scale(scale, scale)
-                canvas.translate(0f, -srcTop)
+                // Paint only the writable band; the margins stay white.
+                canvas.clipRect(
+                    RectF(0f, marginPt.toFloat(), pageWPt.toFloat(), (marginPt + contentHPt).toFloat())
+                )
+                canvas.translate(0f, marginPt.toFloat())          // top margin
+                canvas.scale(scale, scale)                        // device px -> points
+                canvas.translate(0f, -(k * sliceDev).toFloat())   // k-th content slice
                 view.draw(canvas)
                 canvas.restore()
+
                 document.finishPage(pdfPage)
             }
 
@@ -256,7 +284,7 @@ class MainActivity : AudioServiceActivity() {
             outFile.parentFile?.mkdirs()
             FileOutputStream(outFile).use { fos -> document.writeTo(fos) }
             document.close()
-            Log.d(tag, "renderRaster wrote $pages pages")
+            Log.d(tag, "renderRaster wrote $pages pages (margin=$marginPx, sliceCss=$contentHeightPx)")
             true
         } catch (e: Exception) {
             Log.e(tag, "renderRaster error", e)

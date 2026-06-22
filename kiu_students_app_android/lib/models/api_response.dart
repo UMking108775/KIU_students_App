@@ -5,11 +5,17 @@ class ApiResponse<T> {
   final T? data;
   final Map<String, List<String>>? errors;
 
+  /// Set when the server asks the client to confirm before proceeding
+  /// (HTTP 409 with `requires_confirmation: true`), e.g. logging in while the
+  /// account is active on another device.
+  final bool requiresConfirmation;
+
   ApiResponse({
     required this.success,
     required this.message,
     this.data,
     this.errors,
+    this.requiresConfirmation = false,
   });
 
   factory ApiResponse.error(String message) {
@@ -27,6 +33,7 @@ class ApiResponse<T> {
       data: json['data'] != null && fromJsonT != null
           ? fromJsonT(json['data'])
           : json['data'] as T?,
+      requiresConfirmation: json['requires_confirmation'] == true,
       errors: json['errors'] != null
           ? (json['errors'] as Map<String, dynamic>).map(
               (key, value) => MapEntry(

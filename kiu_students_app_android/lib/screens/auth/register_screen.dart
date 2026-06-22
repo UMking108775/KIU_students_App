@@ -148,10 +148,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const AuthHeader(
                   title: 'Create Account',
                   subtitle: 'Join KIU Students community',
-                  logoHeight: 80,
+                  logoHeight: 64,
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // Name field
                 AuthTextField(
@@ -217,7 +217,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onFieldSubmitted: (_) => _handleRegister(),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // Register button
                 Consumer<AuthProvider>(
@@ -249,7 +249,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
+
+                // Branding footer
+                Text(
+                  'Powered by SSA Technologies',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.3,
+                    color: colors.textHint,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
               ],
             ),
           ),

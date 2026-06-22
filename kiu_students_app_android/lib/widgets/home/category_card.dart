@@ -45,11 +45,30 @@ class CategoryCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: colors.surface,
           borderRadius: BorderRadius.circular(12),
+          // Hairline border all around (uniform — required when a borderRadius
+          // is set), kept faint on the top/left.
+          border: Border.all(
+            color: colors.border.withValues(alpha: isDark ? 0.4 : 0.25),
+            width: 1,
+          ),
           boxShadow: [
+            // Tight, near-solid line hugging the bottom-right edge — reads as a
+            // prominent stroke on just those two sides.
             BoxShadow(
-              color: colors.primary.withValues(alpha: 0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: isDark
+                  ? colors.border
+                  : const Color(0xFF1E293B).withValues(alpha: 0.55),
+              blurRadius: 1,
+              spreadRadius: 0,
+              offset: const Offset(2, 2),
+            ),
+            // Soft drop shadow toward the bottom-right for a tactile, raised feel.
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.55)
+                  : const Color(0xFF1E293B).withValues(alpha: 0.18),
+              blurRadius: 9,
+              offset: const Offset(4, 6),
             ),
           ],
         ),

@@ -10,6 +10,7 @@ import 'pdf_compress_screen.dart';
 import 'pdf_split_screen.dart';
 import 'gpa_calculator_screen.dart';
 import 'my_pdfs_screen.dart';
+import 'widgets/tool_card_style.dart';
 
 /// Landing page for student utility tools. Currently hosts the
 /// "Scan & Make PDF" tool and "My PDFs" history; built to grow over time.
@@ -128,7 +129,7 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
             _ToolCard(
               icon: Icons.calculate_rounded,
               title: 'GPA Calculator',
-              subtitle: 'Out of 4.0, 5.0, 10.0',
+              subtitle: 'KIU semester GPA & CGPA',
               gradient: [colors.success, colors.accent],
               onTap: () => Navigator.push(
                 context,
@@ -190,26 +191,9 @@ class _ToolCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? colors.border : colors.border.withValues(alpha: 0.7),
-        ),
-        boxShadow: [
-          // Crisp drop shadow toward the bottom-right for a tactile, designed feel.
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.55)
-                : const Color(0xFF1E293B).withValues(alpha: 0.18),
-            blurRadius: 9,
-            offset: const Offset(4, 6),
-          ),
-        ],
-      ),
+      decoration: toolCardDecoration(context),
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
