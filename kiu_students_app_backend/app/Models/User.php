@@ -69,6 +69,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the level 1 (main) categories that the user has access to.
+     */
+    public function accessibleLevel1Categories()
+    {
+        return $this->belongsToMany(Category::class, 'user_category_access', 'user_id', 'category_id')
+                    ->wherePivot('has_access', true)
+                    ->where('categories.level', 1)
+                    ->orderBy('title');
+    }
+
+    /**
      * Check if user has access to a specific category.
      */
     public function hasAccessToCategory($categoryId): bool

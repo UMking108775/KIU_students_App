@@ -60,6 +60,7 @@ class UserController extends Controller
             ->withCount(['categoryAccess as categories_count' => function ($query) {
                 $query->where('has_access', true);
             }])
+            ->with(['accessibleLevel1Categories'])
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 

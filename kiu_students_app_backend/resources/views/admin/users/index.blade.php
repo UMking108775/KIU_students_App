@@ -164,7 +164,7 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($users as $user)
-                    <tr class="hover:bg-gray-50 transition-colors user-row" data-user-id="{{ $user->id }}">
+                    <tr class="hover:bg-gray-50 transition-colors user-row" data-user-id="{{ $user->id }}" data-assigned-categories="{{ json_encode($user->accessibleLevel1Categories->pluck('id')) }}">
                         <td class="px-4 py-4">
                             <input 
                                 type="checkbox" 
@@ -187,13 +187,24 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-600">{{ $user->whatsapp_number }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($user->categories_count > 0)
+                        <td class="px-6 py-4">
+                            @if($user->accessibleLevel1Categories->count() > 0)
+                            <div class="flex flex-wrap gap-1.5 max-w-xs">
+                                @foreach($user->accessibleLevel1Categories as $lvl1Cat)
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm" title="{{ $lvl1Cat->title }}">
+                                    <svg class="w-3 h-3 mr-1 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    {{ $lvl1Cat->title }}
+                                </span>
+                                @endforeach
+                            </div>
+                            @elseif($user->categories_count > 0)
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                {{ $user->categories_count }} categories
+                                {{ $user->categories_count }} subcategories
                             </span>
                             @else
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
@@ -453,12 +464,45 @@ function openCategoryModal() {
     form.querySelectorAll('input[name="user_ids[]"]').forEach(input => input.remove());
     
     // Add new hidden inputs for each selected user
-    selectedUsers.forEach(userId => {
+    const selectedUserIdsArray = Array.from(selectedUsers);
+    selectedUserIdsArray.forEach(userId => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = 'user_ids[]';
         input.value = userId;
         form.appendChild(input);
+    });
+
+    // Collect assigned level 1 category IDs for selected users
+    let categoryLists = [];
+    selectedUserIdsArray.forEach(userId => {
+        const row = document.querySelector(`.user-row[data-user-id="${userId}"]`);
+        if (row && row.dataset.assignedCategories) {
+            try {
+                const cats = JSON.parse(row.dataset.assignedCategories);
+                categoryLists.push(cats.map(id => Number(id)));
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    });
+
+    // Determine which category checkboxes should be checked by default
+    let activeCategoryIds = new Set();
+    if (categoryLists.length === 1) {
+        // Single user selected: pre-select all assigned categories for this user
+        categoryLists[0].forEach(id => activeCategoryIds.add(id));
+    } else if (categoryLists.length > 1) {
+        // Multiple users selected: pre-select categories shared by ALL selected users
+        const commonCats = categoryLists.reduce((acc, current) => {
+            return acc.filter(id => current.includes(id));
+        });
+        commonCats.forEach(id => activeCategoryIds.add(id));
+    }
+
+    // Update category checkboxes state in modal
+    document.querySelectorAll('.category-checkbox').forEach(cb => {
+        cb.checked = activeCategoryIds.has(Number(cb.value));
     });
     
     document.getElementById('modalSelectedCount').textContent = selectedUsers.size;
